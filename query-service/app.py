@@ -9,7 +9,7 @@ from websocket.websocket_manager import ws_manager
 from websocket.socket_handlers import register_socketio_events
 from services.topic_service import get_topic_data, stream_topic_data
 from api.router import api_bp
-
+from web.router import web_bp
 
 # UDP notification callback
 def on_new_data(message: dict):
@@ -50,6 +50,7 @@ ws_manager.sio = socketio
 
 # Đăng ký Blueprint cho HTTP API
 app.register_blueprint(api_bp)
+app.register_blueprint(web_bp)
 
 # Đăng ký Socket.IO event handlers
 register_socketio_events(socketio, ws_manager, get_topic_data)

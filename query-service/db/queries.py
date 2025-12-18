@@ -92,14 +92,14 @@ def get_system_metrics(
             # Load averages
             if start_time is None:
                 # Snapshot Mode: Latest load average
-            cur.execute("""
-                    SELECT time, load_1m, load_5m, load_15m
-                FROM load_avg
-                    WHERE sysname = %s
-                ORDER BY time DESC
-                LIMIT 1
-                """, (sysname,))
-            result['load_avg'] = serialize_row(cur.fetchone())
+                cur.execute("""
+                        SELECT time, load_1m, load_5m, load_15m
+                    FROM load_avg
+                        WHERE sysname = %s
+                    ORDER BY time DESC
+                    LIMIT 1
+                    """, (sysname,))
+                result['load_avg'] = serialize_row(cur.fetchone())
             else:
                 # Range Mode: All load averages in time range (with downsampling)
                 end_time = end_time or datetime.now()
@@ -149,17 +149,17 @@ def get_cpu_metrics(
             
             if start_time is None:
                 # Snapshot Mode: Latest CPU percent per core
-            cur.execute("""
-                    SELECT cpu, percent, time
-                FROM (
-                    SELECT cpu, percent, time,
-                           ROW_NUMBER() OVER (PARTITION BY cpu ORDER BY time DESC) AS rn
-                    FROM cpu_percent
-                    WHERE sysname = %s
-                ) ranked
-                    WHERE rn = 1
-                ORDER BY cpu
-                """, (sysname,))
+                cur.execute("""
+                        SELECT cpu, percent, time
+                        FROM (
+                            SELECT cpu, percent, time,
+                            ROW_NUMBER() OVER (PARTITION BY cpu ORDER BY time DESC) AS rn
+                            FROM cpu_percent
+                            WHERE sysname = %s
+                            ) ranked
+                        WHERE rn = 1
+                        ORDER BY cpu
+                    """, (sysname,))
                 result['cpu_percent'] = serialize_rows(cur.fetchall())
             else:
                 # Range Mode: All CPU percent records in time range (with downsampling)
@@ -305,7 +305,7 @@ def get_memory_percent_history(
                         ORDER BY time DESC
                         LIMIT %s
                     """, (sysname, limit))
-    else:
+                else:
                     cur.execute("""
                         SELECT time, percent
                         FROM memory
@@ -334,25 +334,25 @@ def get_memory_metrics(
             
             if start_time is None:
                 # Snapshot Mode: Latest memory record
-            cur.execute("""
-                    SELECT time, total, available, used, free, percent, 
-                       buffers, cached, shared
-                FROM memory
-                    WHERE sysname = %s
-                ORDER BY time DESC
-                LIMIT 1
-                """, (sysname,))
-            result['memory'] = serialize_row(cur.fetchone())
+                cur.execute("""
+                        SELECT time, total, available, used, free, percent, 
+                        buffers, cached, shared
+                    FROM memory
+                        WHERE sysname = %s
+                    ORDER BY time DESC
+                    LIMIT 1
+                    """, (sysname,))
+                result['memory'] = serialize_row(cur.fetchone())
             
                 # Latest swap record
-            cur.execute("""
+                cur.execute("""
                     SELECT time, total, used, free, percent
                 FROM swap_memory
                     WHERE sysname = %s
                 ORDER BY time DESC
                 LIMIT 1
                 """, (sysname,))
-            result['swap'] = serialize_row(cur.fetchone())
+                result['swap'] = serialize_row(cur.fetchone())
             else:
                 # Range Mode: All memory records in time range (with downsampling)
                 end_time = end_time or datetime.now()
@@ -434,31 +434,31 @@ def get_network_metrics(
             
             if start_time is None:
                 # Snapshot Mode: Latest network I/O with rates from previous record
-            cur.execute("""
-                WITH last2 AS (
-                    SELECT iface, time, bytes_sent, bytes_recv, if_admin_status, if_oper_status,
-                           ROW_NUMBER() OVER (PARTITION BY iface ORDER BY time DESC) AS rn
-                    FROM net_io_counters
-                        WHERE sysname = %s
-                )
-                SELECT 
-                    a.iface AS interface, a.time, a.bytes_sent, a.bytes_recv, 
-                    a.if_admin_status, a.if_oper_status,
-                    CASE 
-                        WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN 
-                            GREATEST(0, (a.bytes_sent - b.bytes_sent) / (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6)) 
-                        ELSE NULL
-                    END AS send_bytes_s,
-                    CASE 
-                        WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN 
-                            GREATEST(0, (a.bytes_recv - b.bytes_recv) / (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6)) 
-                        ELSE NULL
-                    END AS recv_bytes_s
-                FROM last2 a
-                LEFT JOIN last2 b ON a.iface = b.iface AND a.rn = 1 AND b.rn = 2
-                WHERE a.rn = 1
-                ORDER BY a.iface
-                """, (sysname,))
+                cur.execute("""
+                    WITH last2 AS (
+                        SELECT iface, time, bytes_sent, bytes_recv, if_admin_status, if_oper_status,
+                            ROW_NUMBER() OVER (PARTITION BY iface ORDER BY time DESC) AS rn
+                        FROM net_io_counters
+                            WHERE sysname = %s
+                    )
+                    SELECT 
+                        a.iface AS interface, a.time, a.bytes_sent, a.bytes_recv, 
+                        a.if_admin_status, a.if_oper_status,
+                        CASE 
+                            WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN 
+                                GREATEST(0, (a.bytes_sent - b.bytes_sent) / (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6)) 
+                            ELSE NULL
+                        END AS send_bytes_s,
+                        CASE 
+                            WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN 
+                                GREATEST(0, (a.bytes_recv - b.bytes_recv) / (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6)) 
+                            ELSE NULL
+                        END AS recv_bytes_s
+                    FROM last2 a
+                    LEFT JOIN last2 b ON a.iface = b.iface AND a.rn = 1 AND b.rn = 2
+                    WHERE a.rn = 1
+                    ORDER BY a.iface
+                    """, (sysname,))
                 result['net_io'] = serialize_rows(cur.fetchall())
             else:
                 # Range Mode: All network I/O records with rates (with downsampling)
@@ -560,7 +560,7 @@ def get_disk_metrics(
             
             if start_time is None:
                 # Snapshot Mode: Latest disk usage per mount (filter only / and /boot/firmware, exclude tmpfs)
-            cur.execute("""
+                cur.execute("""
                 SELECT d1.mount, d1.device_partition,
                            d1.total, d1.used, d1.free, d1.percent, d1.time
                 FROM disk_usage d1
@@ -637,14 +637,14 @@ def get_temperature_metrics(
             
             if start_time is None:
                 # Snapshot Mode: Latest temperature
-            cur.execute("""
-                    SELECT time, cpu_temp
-                FROM temperature
-                    WHERE sysname = %s
-                ORDER BY time DESC
-                LIMIT 1
-                """, (sysname,))
-            row = cur.fetchone()
+                cur.execute("""
+                        SELECT time, cpu_temp
+                    FROM temperature
+                        WHERE sysname = %s
+                    ORDER BY time DESC
+                    LIMIT 1
+                    """, (sysname,))
+                row = cur.fetchone()
                 result['temperature'] = serialize_row(row) if row else None
             else:
                 # Range Mode: All temperature records in time range (with downsampling)
@@ -702,79 +702,79 @@ def get_disk_io_metrics(
             
             if start_time is None:
                 # Snapshot Mode: Latest disk I/O with rates from previous record (paginated)
-            cur.execute("""
-                WITH last2 AS (
-                    SELECT disk, time, read_bytes, write_bytes,
-                           ROW_NUMBER() OVER (PARTITION BY disk ORDER BY time DESC) AS rn
-                    FROM disk_io_counters
-                        WHERE sysname = %s
-                ),
-                active_disks AS (
-                    SELECT 
-                        a.disk,
-                        a.time,
-                        a.read_bytes,
-                        a.write_bytes,
-                        CASE 
-                            WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN
-                                GREATEST(0, (a.read_bytes - b.read_bytes) / 
-                                    (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6))
-                            ELSE NULL
-                        END AS read_bytes_s,
-                        CASE 
-                            WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN
-                                GREATEST(0, (a.write_bytes - b.write_bytes) / 
-                                    (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6))
-                            ELSE NULL
-                        END AS write_bytes_s
-                    FROM last2 a
-                    LEFT JOIN last2 b ON a.disk = b.disk AND a.rn = 1 AND b.rn = 2
-                    WHERE a.rn = 1
-                ),
-                filtered_disks AS (
+                cur.execute("""
+                    WITH last2 AS (
+                        SELECT disk, time, read_bytes, write_bytes,
+                            ROW_NUMBER() OVER (PARTITION BY disk ORDER BY time DESC) AS rn
+                        FROM disk_io_counters
+                            WHERE sysname = %s
+                    ),
+                    active_disks AS (
+                        SELECT 
+                            a.disk,
+                            a.time,
+                            a.read_bytes,
+                            a.write_bytes,
+                            CASE 
+                                WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN
+                                    GREATEST(0, (a.read_bytes - b.read_bytes) / 
+                                        (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6))
+                                ELSE NULL
+                            END AS read_bytes_s,
+                            CASE 
+                                WHEN b.time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, b.time, a.time) > 0 THEN
+                                    GREATEST(0, (a.write_bytes - b.write_bytes) / 
+                                        (TIMESTAMPDIFF(MICROSECOND, b.time, a.time) / 1e6))
+                                ELSE NULL
+                            END AS write_bytes_s
+                        FROM last2 a
+                        LEFT JOIN last2 b ON a.disk = b.disk AND a.rn = 1 AND b.rn = 2
+                        WHERE a.rn = 1
+                    ),
+                    filtered_disks AS (
+                        SELECT 
+                            disk,
+                            time,
+                            read_bytes,
+                            write_bytes,
+                            read_bytes_s,
+                            write_bytes_s,
+                            COUNT(*) OVER() as total_count
+                        FROM active_disks
+                        WHERE 
+                            disk NOT LIKE 'loop%%' 
+                            AND disk NOT LIKE 'sr%%'
+                            AND disk NOT LIKE 'ram%%'
+                            AND disk NOT LIKE 'zram%%'
+                    )
                     SELECT 
                         disk,
-                        time,
                         read_bytes,
                         write_bytes,
                         read_bytes_s,
                         write_bytes_s,
-                        COUNT(*) OVER() as total_count
-                    FROM active_disks
-                    WHERE 
-                        disk NOT LIKE 'loop%%' 
-                        AND disk NOT LIKE 'sr%%'
-                        AND disk NOT LIKE 'ram%%'
-                        AND disk NOT LIKE 'zram%%'
-                )
-                SELECT 
-                    disk,
-                    read_bytes,
-                    write_bytes,
-                    read_bytes_s,
-                    write_bytes_s,
-                    total_count
-                FROM filtered_disks
-                ORDER BY COALESCE(read_bytes_s, 0) + COALESCE(write_bytes_s, 0) DESC, disk
-                LIMIT %s OFFSET %s
-                """, (sysname, per_page, offset))
-            
-            rows = serialize_rows(cur.fetchall())
-            total_count = rows[0]['total_count'] if rows else 0
-            
-            # Remove total_count from data rows
-            for row in rows:
-                row.pop('total_count', None)
-            
-            result['disk_io'] = {
-                'data': rows,
-                'pagination': {
-                    'page': page,
-                    'per_page': per_page,
-                    'total': total_count,
-                    'total_pages': (total_count + per_page - 1) // per_page
+                        total_count
+                    FROM filtered_disks
+                    ORDER BY COALESCE(read_bytes_s, 0) + COALESCE(write_bytes_s, 0) DESC, disk
+                    LIMIT %s OFFSET %s
+                    """, (sysname, per_page, offset))
+                
+                rows = serialize_rows(cur.fetchall())
+                total_count = rows[0]['total_count'] if rows else 0
+                
+                # Remove total_count from data rows
+                for row in rows:
+                    row.pop('total_count', None)
+                
+                result['disk_io'] = {
+                    'data': rows,
+                    'pagination': {
+                        'page': page,
+                        'per_page': per_page,
+                        'total': total_count,
+                        'total_pages': (total_count + per_page - 1) // per_page
+                    }
                 }
-            }
             else:
                 # Range Mode: All disk I/O records with rates (with downsampling)
                 end_time = end_time or datetime.now()

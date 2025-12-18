@@ -2,6 +2,7 @@ import time
 from flask import request
 from datetime import datetime
 from typing import Optional
+from utils.time_range import parse_time_range
 
 
 def register_socketio_events(socketio, ws_manager, get_topic_data):
@@ -168,11 +169,7 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
 
         try:
             # Parse datetime strings
-            start_time = datetime.fromisoformat(start_time_str.replace("Z", "+00:00"))
-            if end_time_str:
-                end_time = datetime.fromisoformat(end_time_str.replace("Z", "+00:00"))
-            else:
-                end_time = datetime.now()
+            start_time, end_time = parse_time_range(start_time_str, end_time_str)
 
             # Fetch historical data (Range Mode)
             payload = get_topic_data(
