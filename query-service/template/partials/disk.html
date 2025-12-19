@@ -1,0 +1,60 @@
+<section class="metrics-section">
+    <h2 class="section-title">Disk Usage</h2>
+    <div id="disk-usage-container" class="disk-usage-grid">
+        <!-- Disk usage will be dynamically inserted here -->
+    </div>
+</section>
+
+{% block extra_scripts %}
+<script type="module">
+    /**
+     * Disk Dashboard initializer
+     * Called by main dashboard.js SPA controller
+     */
+    export function initTopicDashboard(sysname, topic, wsManager, dataProcessor) {
+        console.log('[DiskDashboard] initTopicDashboard', sysname, topic);
+
+        const uiUpdater = {
+            updateDiskUsage(disks) {
+                const container = document.getElementById('disk-usage-container');
+                if (!container) return;
+
+                container.innerHTML = '';
+
+                if (!Array.isArray(disks)) return;
+
+                disks.forEach(disk => {
+                    const diskCard = document.createElement('div');
+                    diskCard.className = 'disk-card';
+                    diskCard.innerHTML = `
+                        <h3>${disk.name || '-'}</h3>
+                        <p>Used: ${dataProcessor.formatBytes(disk.used || 0)}</p>
+                        <p>Total: ${dataProcessor.formatBytes(disk.total || 0)}</p>
+                        <p>Free: ${dataProcessor.formatBytes(disk.free || 0)}</p>
+                        <div class="disk-progress-bar">
+                            <div class="disk-progress" style="width: ${disk.percent || 0}%"></div>
+                        </div>
+                    `;
+                    container.appendChild(diskCard);
+                });
+            }
+        };
+
+        // Listen WebSocket messages
+        wsManager.on('message', (msg) => {
+            if (msg.type === 'data' && msg.topic === topic) {
+                const processed = dataProcessor.process(topic, msg.data);
+                if (processed) {
+                    uiUpdater.updateDiskUsage(processed.disks);
+                }
+            }
+        });
+
+        return {
+            destroy() {
+                console.log('[DiskDashboard] destroy');
+            }
+        };
+    }
+</script>
+{% endblock %}

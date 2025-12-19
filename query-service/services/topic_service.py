@@ -1,5 +1,6 @@
 from typing import Optional
 from datetime import datetime
+from unittest import result
 
 from db.queries import (
     get_system_metrics,
@@ -46,31 +47,39 @@ def get_topic_data(
     try:
         if topic == "systemstatus":
             print(f"[TopicService] Aggregating status (no disk usage) for {sysname}")
-            return get_status_metrics(
+            data = get_status_metrics(
                 sysname,
                 start_time=start_time,
                 end_time=end_time
             )
+            print(f"[TopicService] Fetched system status metrics: {data}")
+            return data
         elif topic == "network":
-            return get_network_metrics(
+            data = get_network_metrics(
                 sysname,
                 start_time=start_time,
                 end_time=end_time
             )
+            print(f"[TopicService] Fetched network metrics: {data}")
+            return data
         elif topic == "disk":
-            return get_disk_metrics(
+            data = get_disk_metrics(
                 sysname,
                 start_time=start_time,
                 end_time=end_time
             )
+            print(f"[TopicService] Fetched disk metrics: {data}")
+            return data
         elif topic == "diskio":
-            return get_disk_io_metrics(
+            data = get_disk_io_metrics(
                 sysname,
-                start_time=start_time,
-                end_time=end_time,
                 page=page,
                 per_page=per_page,
+                start_time=start_time,
+                end_time=end_time
             )
+            print(f"[TopicService] Fetched disk IO metrics: {data}")
+            return data
         else:
             print(f"[TopicService] Unknown topic: {topic}")
             return {}

@@ -1,0 +1,92 @@
+<section class="metrics-section">
+    <h2 class="section-title">Disk IO Statistics</h2>
+    <div id="diskio-table-container">
+        <table class="diskio-table">
+            <thead>
+                <tr>
+                    <th>Disk</th>
+                    <th>Read Bytes/s</th>
+                    <th>Write Bytes/s</th>
+                    <th>Total Read</th>
+                    <th>Total Write</th>
+                </tr>
+            </thead>
+            <tbody id="diskio-tbody">
+                <!-- Disk IO data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination-container" class="pagination">
+        <!-- Pagination will be dynamically inserted here -->
+    </div>
+</section>
+
+{% block extra_scripts %}
+<script type="module">
+    /**
+     * DiskIO Dashboard initializer
+     * Called by main dashboard.js SPA controller
+     */
+    export function initTopicDashboard(sysname, topic, wsManager, dataProcessor) {
+        console.log('[DiskIODashboard] initTopicDashboard', sysname, topic);
+
+        const uiUpdater = {
+            updateDiskIO(data) {
+                const tbody = document.getElementById('diskio-tbody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                if (!Array.isArray(data)) return;
+
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.disk || '-'}</td>
+                        <td>${dataProcessor.formatBytes(row.read_bytes_s || 0)}/s</td>
+                        <td>${dataProcessor.formatBytes(row.write_bytes_s || 0)}/s</td>
+                        <td>${dataProcessor.formatBytes(row.total_read || 0)}</td>
+                        <td>${dataProcessor.formatBytes(row.total_write || 0)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            },
+
+            updatePagination(meta) {
+                const container = document.getElementById('pagination-container');
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (!meta || !meta.total_pages || meta.total_pages <= 1) return;
+
+                for (let i = 1; i <= meta.total_pages; i++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = i;
+                    btn.className = 'page-btn';
+                    if (i === meta.current_page) btn.classList.add('active');
+                    btn.addEventListener('click', () => {
+                        wsManager.send({ type: 'request_page', topic: topic, page: i });
+                    });
+                    container.appendChild(btn);
+                }
+            }
+        };
+
+        // Listen WebSocket messages
+        wsManager.on('message', (msg) => {
+            if (msg.type === 'data' && msg.topic === topic) {
+                const processed = dataProcessor.process(topic, msg.data);
+                if (processed) {
+                    uiUpdater.updateDiskIO(processed.rows);
+                    uiUpdater.updatePagination(processed.meta);
+                }
+            }
+        });
+
+        return {
+            destroy() {
+                console.log('[DiskIODashboard] destroy');
+            }
+        };
+    }
+</script>
+{% endblock %}

@@ -18,10 +18,19 @@ class WebSocketManager:
         """
         topic_key = f"{sysname}:{topic}"
 
+        # If the sid was previously subscribed to another topic, remove it
+        prev = self.websocket_topic.get(sid)
+        if prev and prev != topic_key:
+            if prev in self.topic_websockets:
+                self.topic_websockets[prev].discard(sid)
+                if not self.topic_websockets[prev]:
+                    del self.topic_websockets[prev]
+
         if topic_key not in self.topic_websockets:
             self.topic_websockets[topic_key] = set()
         self.topic_websockets[topic_key].add(sid)
 
+        # Update reverse mapping
         self.websocket_topic[sid] = topic_key
 
         print(f"[WebSocketManager] Client connected to {topic_key} (sid={sid})")

@@ -2,7 +2,7 @@
  * Disk Dashboard Module
  * Handles disk metrics page
  */
-import { BaseDashboardUI } from './base.js';
+import { BaseDashboardUI } from '/static/js/dashboard/base.js';
 
 export class DiskDashboard extends BaseDashboardUI {
     constructor(dataProcessor) {

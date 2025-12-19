@@ -2,7 +2,7 @@
  * Network Dashboard Module
  * Handles network metrics page
  */
-import { BaseDashboardUI } from './base.js';
+import { BaseDashboardUI } from '/static/js/dashboard/base.js';
 
 export class NetworkDashboard extends BaseDashboardUI {
     constructor(dataProcessor) {

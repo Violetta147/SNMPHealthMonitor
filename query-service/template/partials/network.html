@@ -1,0 +1,33 @@
+<section class="metrics-section">
+    <h2 class="section-title">Network Interfaces</h2>
+    <div id="network-interfaces-container"></div>
+</section>
+
+{% block extra_scripts %}
+<script type="module">
+    export function initTopicDashboard(sysname, topic, wsManager, dataProcessor) {
+        console.log('[NetworkDashboard] initTopicDashboard called', sysname, topic);
+        const dashboard = new NetworkDashboard(dataProcessor);
+
+        // Register UI elements
+        dashboard.registerElements();
+
+        // Setup WebSocket message handler
+        wsManager.on('message', (msg) => {
+            if (msg.type === 'data' && msg.topic === topic) {
+                const processed = dataProcessor.process(topic, msg.data);
+                dashboard.update(processed);
+            }
+        });
+
+        // Return object for optional destroy
+        return {
+            destroy() {
+                console.log('[NetworkDashboard] destroy called');
+            }
+        };
+    }
+
+    import { NetworkDashboard } from '/static/js/dashboard/network.js';
+</script>
+{% endblock %}

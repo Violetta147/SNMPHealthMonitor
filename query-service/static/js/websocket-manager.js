@@ -89,7 +89,21 @@ export class WebSocketManager {
      * Giữ lại để tương thích nhưng không làm gì
      */
     subscribe(topic, page = 1, perPage = 10) {
-        console.log('[WebSocketManager] Already subscribed to topic ' + this.topic + ' on connect');
+        // Allow changing topic without reconnecting: emit subscribe payload
+        if (!this.socket || !this.isConnected) {
+            console.warn('[WebSocketManager] Cannot subscribe - socket not connected');
+            // update internal topic so future connect uses it
+            this.topic = topic;
+            return;
+        }
+
+        const payload = {
+            sysname: this.sysname,
+            topic: topic
+        };
+        console.log('[WebSocketManager] Emitting subscribe payload:', payload);
+        this.socket.emit('subscribe', payload);
+        this.topic = topic;
     }
 
     /**
