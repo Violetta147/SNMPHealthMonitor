@@ -3,7 +3,7 @@ from flask import request
 from datetime import datetime
 from typing import Optional
 from utils.time_range import parse_time_range
-
+from utils.logging import configure_logger
 
 def register_socketio_events(socketio, ws_manager, get_topic_data):
     """
@@ -13,16 +13,17 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
     ws_manager: WebSocketManager instance
     get_topic_data: function để lấy dữ liệu metrics theo topic
     """
+    logger = configure_logger(__name__)
 
     @socketio.on("connect")
     def handle_connect():
         sid = request.sid
-        print(f"[SocketIO] Client connected, sid={sid}")
+        logger.info(f"Client connected, sid={sid}")
 
     @socketio.on("disconnect")
     def handle_disconnect():
         sid = request.sid
-        print(f"[SocketIO] Client disconnected, sid={sid}")
+        logger.info(f"Client disconnected, sid={sid}")
         ws_manager.disconnect(sid)
 
     @socketio.on("subscribe")
@@ -38,10 +39,10 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
         sysname = data.get("sysname")
         topic = data.get("topic") or "systemstatus"
 
-        print(f"[SocketIO] Subscribe requested: sid={sid}, sysname={sysname}, topic={topic}")
+        logger.info(f"Subscribe requested: sid={sid}, sysname={sysname}, topic={topic}")
 
         if not sysname:
-            print(f"[SocketIO] Missing sysname in subscribe payload: {data}")
+            logger.warning(f"Missing sysname in subscribe payload: {data}")
             return
 
         # Đăng ký client vào topic
@@ -60,20 +61,18 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
                 },
                 to=sid,
             )
-            print(f"[SocketIO] Sent initial {topic} data to sid={sid}")
+            logger.info(f"Sent initial {topic} data to sid={sid}")
         except Exception as e:
-            print(
-                f"[SocketIO] Error sending initial data for {sysname}/{topic} "
-                f"to sid={sid}: {e}"
+            logger.error(
+                f"Error sending initial data for {sysname}/{topic} "
+                f"to sid={sid}: {e}", exc_info=True
             )
-            import traceback
-            traceback.print_exc()
 
     @socketio.on("ping")
     def handle_ping(data=None):
         """Đơn giản trả về pong để giữ kết nối."""
         sid = request.sid
-        print(f"[SocketIO] Ping from sid={sid}, data={data}")
+        logger.debug(f"Ping from sid={sid}, data={data}")
         socketio.emit("pong", {"ts": time.time()}, to=sid)
 
     @socketio.on("paginate")
@@ -88,17 +87,17 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
         page = int(data.get("page", 1))
         per_page = int(data.get("per_page", 10))
 
-        print(
-            f"[SocketIO] Paginate requested: sid={sid}, sysname={sysname}, "
+        logger.info(
+            f"Paginate requested: sid={sid}, sysname={sysname}, "
             f"topic={topic}, page={page}, per_page={per_page}"
         )
 
         if not sysname:
-            print(f"[SocketIO] Missing sysname in paginate payload: {data}")
+            logger.warning(f"Missing sysname in paginate payload: {data}")
             return
 
         if topic != "diskio":
-            print(f"[SocketIO] Pagination only supported for diskio topic, got {topic}")
+            logger.warning(f"Pagination only supported for diskio topic, got {topic}")
             return
 
         try:
@@ -114,14 +113,12 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
                 },
                 to=sid,
             )
-            print(f"[SocketIO] Sent paginated {topic} data to sid={sid}")
+            logger.info(f"Sent paginated {topic} data to sid={sid}")
         except Exception as e:
-            print(
-                f"[SocketIO] Error sending paginated data for {sysname}/{topic} "
-                f"to sid={sid}: {e}"
+            logger.error(
+                f"Error sending paginated data for {sysname}/{topic} "
+                f"to sid={sid}: {e}", exc_info=True
             )
-            import traceback
-            traceback.print_exc()
 
     @socketio.on("query_range")
     def handle_query_range(data):
@@ -135,14 +132,6 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
             'page': int (optional, for diskio only),
             'per_page': int (optional, for diskio only)
         }
-        
-        Example:
-        {
-            "sysname": "viole",
-            "topic": "systemstatus",
-            "start_time": "2025-12-14T01:00:00",
-            "end_time": "2025-12-14T02:00:00"
-        }
         """
         sid = request.sid
         sysname = data.get("sysname")
@@ -152,18 +141,18 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
         page = int(data.get("page", 1))
         per_page = int(data.get("per_page", 10))
 
-        print(
-            f"[SocketIO] Query range requested: sid={sid}, sysname={sysname}, topic={topic}, "
+        logger.info(
+            f"Query range requested: sid={sid}, sysname={sysname}, topic={topic}, "
             f"start_time={start_time_str}, end_time={end_time_str}"
         )
 
         if not sysname:
-            print(f"[SocketIO] Missing sysname in query_range payload: {data}")
+            logger.error(f"Missing sysname in query_range payload: {data}")
             socketio.emit("error", {"message": "Missing sysname"}, to=sid)
             return
 
         if not start_time_str:
-            print(f"[SocketIO] Missing start_time in query_range payload: {data}")
+            logger.error(f"Missing start_time in query_range payload: {data}")
             socketio.emit("error", {"message": "Missing start_time for range query"}, to=sid)
             return
 
@@ -196,15 +185,14 @@ def register_socketio_events(socketio, ws_manager, get_topic_data):
                 },
                 to=sid,
             )
-            print(f"[SocketIO] Sent range query {topic} data to sid={sid}")
+            logger.info(f"Sent range query {topic} data to sid={sid}")
         except ValueError as e:
             error_msg = f"Invalid datetime format: {e}"
-            print(f"[SocketIO] {error_msg}")
+            logger.error(error_msg)
             socketio.emit("error", {"message": error_msg}, to=sid)
         except Exception as e:
-            print(f"[SocketIO] Error sending range query data for {sysname}/{topic} to sid={sid}: {e}")
-            import traceback
-            traceback.print_exc()
+            logger.error(
+                f"Error sending range query data for {sysname}/{topic} to sid={sid}: {e}",
+                exc_info=True
+            )
             socketio.emit("error", {"message": str(e)}, to=sid)
-
-

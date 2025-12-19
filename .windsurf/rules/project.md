@@ -1,7 +1,7 @@
 ---
-description: This is helpful for building the notebook
-alwaysApply: false
+trigger: model_decision
 ---
+
 As we build our notebook, we'll follow this structure:
 
 Use # %% for code cells

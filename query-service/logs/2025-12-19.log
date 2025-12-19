@@ -1,0 +1,681 @@
+2025-12-19 20:53:24,667 - __main__ - INFO - [Main] Starting Flask + Socket.IO app
+2025-12-19 20:53:24,670 - notifications.udp_listener - INFO - Started on port 6003
+2025-12-19 20:53:24,670 - notifications.udp_listener - INFO - Listening on port 6003
+2025-12-19 20:53:29,071 - websocket.socket_handlers - INFO - Client connected, sid=k5xj5yU7S6al091oAAAB
+2025-12-19 20:53:29,101 - websocket.socket_handlers - INFO - Subscribe requested: sid=k5xj5yU7S6al091oAAAB, sysname=viole, topic=systemstatus
+2025-12-19 20:53:29,102 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=k5xj5yU7S6al091oAAAB)
+2025-12-19 20:53:39,438 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=k5xj5yU7S6al091oAAAB
+2025-12-19 20:54:09,067 - websocket.socket_handlers - INFO - Client disconnected, sid=k5xj5yU7S6al091oAAAB
+2025-12-19 20:54:09,068 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=k5xj5yU7S6al091oAAAB)
+2025-12-19 21:01:10,271 - websocket.socket_handlers - INFO - Client connected, sid=ZrckBBIQmf1WG6vcAAAD
+2025-12-19 21:01:10,285 - websocket.socket_handlers - INFO - Subscribe requested: sid=ZrckBBIQmf1WG6vcAAAD, sysname=viole, topic=systemstatus
+2025-12-19 21:01:10,286 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=ZrckBBIQmf1WG6vcAAAD)
+2025-12-19 21:01:20,597 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=ZrckBBIQmf1WG6vcAAAD
+2025-12-19 21:15:41,198 - __main__ - INFO - [Main] Starting Flask + Socket.IO app
+2025-12-19 21:15:41,200 - notifications.udp_listener - INFO - Started on port 6003
+2025-12-19 21:15:41,201 - notifications.udp_listener - INFO - Listening on port 6003
+2025-12-19 21:54:09,113 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:09,118 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:16,237 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:16,238 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:23,294 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:23,306 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:30,527 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:30,529 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:37,355 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:37,356 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:44,512 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:44,513 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:51,883 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:51,884 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:54:59,287 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:54:59,287 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:06,173 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:06,173 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:13,150 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:13,151 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:19,891 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:19,892 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:26,961 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:26,962 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:34,338 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:34,345 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:41,160 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:41,161 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:48,081 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:48,082 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:55:55,008 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:55:55,008 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:02,698 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:02,705 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:09,669 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:09,669 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:16,459 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:16,461 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:23,286 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:23,287 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:31,152 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:31,165 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:38,363 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:38,363 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:47,261 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:47,314 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:56:54,247 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:56:54,247 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:01,255 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:01,257 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:08,366 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:08,367 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:15,298 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:15,300 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:21,984 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:21,985 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:28,785 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:28,785 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:35,484 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:35,486 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:42,479 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:42,480 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:49,958 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:49,960 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:57:56,648 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:57:56,649 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:05,109 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:05,110 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:13,527 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:13,528 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:20,726 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:20,727 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:27,440 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:27,441 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:34,218 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:34,218 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:40,904 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:40,906 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:47,713 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:47,714 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:58:54,626 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:58:54,627 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:01,830 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:01,833 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:09,097 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:09,099 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:16,029 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:16,030 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:22,753 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:22,753 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:29,585 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:29,586 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:36,278 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:36,278 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:43,025 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:43,027 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:50,683 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:50,684 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 21:59:59,138 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 21:59:59,139 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:06,260 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:06,261 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:13,611 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:13,612 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:22,105 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:22,106 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:29,063 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:29,064 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:35,868 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:35,869 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:45,126 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:45,130 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:00:53,356 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:00:53,398 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:01,361 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:01,363 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:09,405 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:09,407 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:18,749 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:18,751 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:25,961 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:25,964 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:34,771 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:34,775 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:42,259 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:42,261 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:49,053 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:49,054 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:01:56,207 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:01:56,208 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:02,965 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:02,966 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:09,957 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:09,958 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:16,737 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:16,738 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:25,254 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:25,255 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:32,136 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:32,139 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:39,002 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:39,002 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:45,728 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:45,729 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:52,850 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:52,853 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:02:59,571 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:02:59,575 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:06,919 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:06,919 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:13,691 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:13,691 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:21,843 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:21,873 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:28,829 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:28,830 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:36,306 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:36,306 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:43,049 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:43,050 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:50,235 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:50,236 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:03:57,251 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:03:57,254 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:04,363 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:04,366 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:12,114 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:12,116 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:18,836 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:18,837 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:25,661 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:25,665 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:32,802 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:32,803 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:40,115 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:40,115 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:46,933 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:46,933 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:04:56,177 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:04:56,179 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:03,476 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:03,478 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:12,826 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:12,827 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:21,156 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:21,156 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:28,075 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:28,081 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:35,541 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:35,544 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:43,080 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:43,082 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:05:50,918 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:05:50,919 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:09:58,529 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:09:58,530 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:10:05,549 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:10:05,549 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:10:13,060 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:10:13,060 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:10:20,266 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:10:20,267 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:10:27,714 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:10:27,715 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:10:34,671 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:10:34,671 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:10:58,577 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:10:58,578 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:11:05,654 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:11:05,655 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:11:12,555 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:11:12,559 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:11:19,467 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:11:19,467 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:11:26,706 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:11:26,707 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:11:33,966 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:11:33,966 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:11:56,464 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:11:56,464 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:12:03,707 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:12:03,716 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:12:10,581 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:12:10,581 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:12:17,777 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:12:17,777 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:15:00,194 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:15:00,194 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:15:35,190 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:15:35,190 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:15:42,311 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:15:42,313 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:15:49,637 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:15:49,637 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:15:56,437 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:15:56,438 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:16:03,772 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:16:03,772 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:30:33,673 - notifications.udp_listener - INFO - Stopping...
+2025-12-19 22:30:33,675 - notifications.udp_listener - INFO - Socket closed
+2025-12-19 22:30:33,675 - notifications.udp_listener - INFO - Socket closed, exiting listen loop
+2025-12-19 22:30:33,676 - notifications.udp_listener - INFO - Waiting for thread to finish...
+2025-12-19 22:30:33,676 - notifications.udp_listener - INFO - Listen loop ended
+2025-12-19 22:30:33,678 - notifications.udp_listener - INFO - Thread finished
+2025-12-19 22:30:33,678 - __main__ - INFO - [Main] Flask app shutdown
+2025-12-19 22:30:50,237 - __main__ - INFO - [Main] Starting Flask + Socket.IO app
+2025-12-19 22:30:50,239 - notifications.udp_listener - INFO - Started on port 6003
+2025-12-19 22:30:50,239 - notifications.udp_listener - INFO - Listening on port 6003
+2025-12-19 22:32:34,196 - websocket.socket_handlers - INFO - Client connected, sid=Z5qz24kABmXJM7TwAAAH
+2025-12-19 22:32:34,232 - websocket.socket_handlers - INFO - Subscribe requested: sid=Z5qz24kABmXJM7TwAAAH, sysname=viole, topic=systemstatus
+2025-12-19 22:32:34,232 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=Z5qz24kABmXJM7TwAAAH)
+2025-12-19 22:32:41,311 - websocket.socket_handlers - INFO - Client disconnected, sid=Z5qz24kABmXJM7TwAAAH
+2025-12-19 22:32:41,315 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=Z5qz24kABmXJM7TwAAAH)
+2025-12-19 22:32:43,798 - websocket.socket_handlers - INFO - Client connected, sid=N-UeB42Mzkqfjn3BAAAJ
+2025-12-19 22:32:43,815 - websocket.socket_handlers - INFO - Subscribe requested: sid=N-UeB42Mzkqfjn3BAAAJ, sysname=viole, topic=systemstatus
+2025-12-19 22:32:43,816 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=N-UeB42Mzkqfjn3BAAAJ)
+2025-12-19 22:32:44,876 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=Z5qz24kABmXJM7TwAAAH
+2025-12-19 22:32:54,177 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=N-UeB42Mzkqfjn3BAAAJ
+2025-12-19 22:32:57,068 - websocket.socket_handlers - INFO - Client disconnected, sid=N-UeB42Mzkqfjn3BAAAJ
+2025-12-19 22:32:57,069 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=N-UeB42Mzkqfjn3BAAAJ)
+2025-12-19 22:34:12,466 - websocket.socket_handlers - INFO - Client connected, sid=qS4XK7dMMsDKKtUIAAAj
+2025-12-19 22:34:12,510 - websocket.socket_handlers - INFO - Subscribe requested: sid=qS4XK7dMMsDKKtUIAAAj, sysname=viole, topic=systemstatus
+2025-12-19 22:34:12,511 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=qS4XK7dMMsDKKtUIAAAj)
+2025-12-19 22:34:22,813 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=qS4XK7dMMsDKKtUIAAAj
+2025-12-19 22:35:28,626 - websocket.socket_handlers - INFO - Client disconnected, sid=qS4XK7dMMsDKKtUIAAAj
+2025-12-19 22:35:28,721 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=qS4XK7dMMsDKKtUIAAAj)
+2025-12-19 22:36:58,795 - websocket.socket_handlers - INFO - Client connected, sid=GF3uutMN1ZE2PHNNAAA9
+2025-12-19 22:36:58,805 - websocket.socket_handlers - INFO - Subscribe requested: sid=GF3uutMN1ZE2PHNNAAA9, sysname=viole, topic=systemstatus
+2025-12-19 22:36:58,806 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=GF3uutMN1ZE2PHNNAAA9)
+2025-12-19 22:37:02,145 - websocket.socket_handlers - INFO - Client disconnected, sid=GF3uutMN1ZE2PHNNAAA9
+2025-12-19 22:37:02,148 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=GF3uutMN1ZE2PHNNAAA9)
+2025-12-19 22:37:03,602 - websocket.socket_handlers - INFO - Client connected, sid=hHz1plgJ1lfePdgVAAA_
+2025-12-19 22:37:03,643 - websocket.socket_handlers - INFO - Subscribe requested: sid=hHz1plgJ1lfePdgVAAA_, sysname=viole, topic=systemstatus
+2025-12-19 22:37:03,645 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=hHz1plgJ1lfePdgVAAA_)
+2025-12-19 22:37:09,138 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=GF3uutMN1ZE2PHNNAAA9
+2025-12-19 22:37:13,937 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=hHz1plgJ1lfePdgVAAA_
+2025-12-19 22:37:15,268 - websocket.socket_handlers - INFO - Client disconnected, sid=hHz1plgJ1lfePdgVAAA_
+2025-12-19 22:37:15,271 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=hHz1plgJ1lfePdgVAAA_)
+2025-12-19 22:37:58,991 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:37:58,992 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:06,898 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:38:06,899 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:14,805 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:38:14,806 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:22,886 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:38:22,889 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:31,340 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:38:31,345 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:36,940 - websocket.socket_handlers - INFO - Client connected, sid=hozatLElmUn6vBw2AABB
+2025-12-19 22:38:37,056 - websocket.socket_handlers - INFO - Subscribe requested: sid=hozatLElmUn6vBw2AABB, sysname=viole, topic=systemstatus
+2025-12-19 22:38:37,058 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=hozatLElmUn6vBw2AABB)
+2025-12-19 22:38:39,606 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:38:39,607 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:39,607 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:38:47,443 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=hozatLElmUn6vBw2AABB
+2025-12-19 22:38:50,121 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:38:50,127 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:38:50,133 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:38:50,215 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:39:00,619 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:39:00,620 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:39:00,620 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:39:00,621 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:39:10,879 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:39:10,880 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:39:10,881 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:39:10,882 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:39:21,212 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:39:21,214 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:39:21,270 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:39:21,274 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:39:31,517 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:39:31,520 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:39:31,521 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:39:31,523 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:39:41,919 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:39:41,921 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:39:41,922 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:39:41,924 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:39:52,223 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:39:52,226 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:39:52,227 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:39:52,229 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:40:02,586 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:40:02,588 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:40:02,589 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:40:02,591 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:40:12,913 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:40:12,914 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:40:12,915 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:40:12,915 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:40:23,159 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:40:23,161 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:40:23,162 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:40:23,164 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:40:33,536 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:40:33,539 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:40:33,541 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:40:33,543 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:40:43,855 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:40:43,856 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:40:43,856 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:40:43,857 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:40:54,184 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:40:54,185 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:40:54,186 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:40:54,187 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:41:04,604 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:41:04,606 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:41:04,608 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:41:04,610 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:41:14,912 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:41:14,912 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:41:14,913 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:41:14,913 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:41:25,244 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:41:25,246 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:41:25,247 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:41:25,248 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:41:35,537 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:41:35,539 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:41:35,542 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:41:35,543 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:41:45,883 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:41:45,883 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:41:45,884 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:41:45,885 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:41:56,181 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:41:56,184 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:41:56,187 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:41:56,196 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:42:06,840 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:42:06,842 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:42:06,843 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:42:06,844 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:42:17,208 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:42:17,210 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:42:17,214 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:42:17,216 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:42:27,591 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:42:27,592 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:42:27,593 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:42:27,594 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:42:37,946 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:42:37,948 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:42:37,949 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:42:37,951 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:42:48,340 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:42:48,343 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:42:48,346 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:42:48,347 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:42:58,728 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:42:58,729 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:42:58,730 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:42:58,730 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:43:09,135 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:43:09,143 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:43:09,146 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:43:09,148 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:43:19,510 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:43:19,512 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:43:19,514 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:43:19,521 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:43:29,847 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:43:29,852 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:43:29,889 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:43:29,921 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:43:40,288 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:43:40,289 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:43:40,289 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:43:40,290 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:43:50,587 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:43:50,589 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:43:50,591 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:43:50,596 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:44:00,942 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:44:00,943 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:44:00,943 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:44:00,944 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:44:11,276 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:44:11,278 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:44:11,279 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:44:11,280 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:44:21,569 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:44:21,569 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:44:21,570 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:44:21,570 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:44:31,916 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:44:31,920 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:44:31,924 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:44:31,927 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:44:42,190 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:44:42,220 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:44:42,221 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:44:42,222 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:44:52,534 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:44:52,536 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:44:52,536 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:44:52,537 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:45:02,917 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:45:02,919 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:45:02,920 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:45:02,923 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:45:13,227 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:45:13,228 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:45:13,229 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:45:13,230 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:45:23,613 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:45:23,616 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:45:23,622 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:45:23,648 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:45:33,992 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:45:33,993 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:45:33,995 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:45:33,996 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:45:44,247 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:45:44,248 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:45:44,248 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:45:44,249 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:45:54,590 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:45:54,593 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:45:54,594 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:45:54,596 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:46:04,878 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:46:04,880 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:46:04,881 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:46:04,882 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:46:15,260 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:46:15,261 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:46:15,262 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:46:15,263 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:46:25,674 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:46:25,675 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:46:25,676 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:46:25,678 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:46:35,956 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:46:35,958 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:46:35,959 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:46:35,961 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:46:46,265 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:46:46,266 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:46:46,267 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:46:46,268 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:46:56,593 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:46:56,594 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:46:56,595 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:46:56,596 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:47:06,972 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:47:06,974 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:47:06,975 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:47:06,976 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:47:17,244 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:47:17,247 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:47:17,277 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:47:17,319 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:47:27,613 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:47:27,614 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:47:27,615 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:47:27,617 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:47:37,912 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:47:37,913 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:47:37,914 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:47:37,915 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:47:48,314 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:47:48,315 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:47:48,317 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:47:48,318 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:47:58,650 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:47:58,651 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:47:58,651 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:47:58,652 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:48:09,003 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:48:09,004 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:48:09,006 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:48:09,007 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:48:19,367 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:48:19,368 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:48:19,368 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:48:19,369 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:48:29,686 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:48:29,687 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:48:29,688 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:48:29,689 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:48:40,017 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:48:40,022 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:48:40,029 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:48:40,036 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:48:50,302 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:48:50,303 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:48:50,303 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:48:50,304 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:49:00,578 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:49:00,586 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:49:00,592 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:49:00,597 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:49:10,988 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:49:10,990 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:49:10,992 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:49:10,993 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:49:21,285 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:49:21,286 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:49:21,286 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:49:21,287 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:49:31,649 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:49:31,650 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:49:31,651 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:49:31,652 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:49:42,015 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:49:42,017 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:49:42,018 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:49:42,020 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:49:52,327 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:49:52,328 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:49:52,329 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:49:52,330 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:50:03,004 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:50:03,006 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:50:03,007 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:50:03,009 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:50:13,310 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:50:13,312 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:50:13,313 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:50:13,315 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:50:23,692 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:50:23,693 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:50:23,694 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:50:23,695 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:50:34,072 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:50:34,073 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:50:34,074 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:50:34,075 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:50:44,472 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:50:44,473 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:50:44,474 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:50:44,476 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:50:54,893 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:50:54,895 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:50:54,896 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:50:54,898 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:51:05,167 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:51:05,168 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:51:05,169 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:51:05,170 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:51:15,458 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:51:15,459 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:51:15,460 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:51:15,461 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:51:25,772 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:51:25,773 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:51:25,774 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:51:25,775 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:51:36,116 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:51:36,116 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:51:36,117 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:51:36,118 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:51:46,389 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:51:46,389 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:51:46,391 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:51:46,394 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:51:56,719 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:51:56,720 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:51:56,722 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:51:56,722 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:52:08,212 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:52:08,213 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:52:08,214 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:52:08,215 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:52:18,672 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:52:18,673 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:52:18,673 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:52:18,674 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:52:29,010 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:52:29,011 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:52:29,013 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:52:29,014 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:52:39,354 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:52:39,355 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:52:39,357 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:52:39,358 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:52:49,684 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:52:49,685 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:52:49,685 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:52:49,685 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:53:00,224 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:53:00,225 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:53:00,225 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:53:00,226 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:53:11,552 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:53:11,553 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:53:11,554 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:53:11,555 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:53:19,959 - notifications.udp_listener - INFO - Stopping...
+2025-12-19 22:53:19,961 - notifications.udp_listener - INFO - Socket closed
+2025-12-19 22:53:19,962 - notifications.udp_listener - INFO - Waiting for thread to finish...
+2025-12-19 22:53:21,857 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:53:21,858 - notifications.udp_listener - INFO - Listen loop ended
+2025-12-19 22:53:21,860 - notifications.udp_listener - INFO - Thread finished
+2025-12-19 22:53:21,861 - __main__ - INFO - [Main] Flask app shutdown
+2025-12-19 22:53:24,249 - __main__ - INFO - [Main] Starting Flask + Socket.IO app
+2025-12-19 22:53:24,250 - notifications.udp_listener - INFO - Started on port 6003
+2025-12-19 22:53:24,251 - notifications.udp_listener - INFO - Listening on port 6003
+2025-12-19 22:53:25,773 - websocket.socket_handlers - INFO - Client connected, sid=mrWK7abG-8CTDw1nAAAB
+2025-12-19 22:53:25,796 - websocket.socket_handlers - INFO - Subscribe requested: sid=mrWK7abG-8CTDw1nAAAB, sysname=viole, topic=systemstatus
+2025-12-19 22:53:25,796 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=mrWK7abG-8CTDw1nAAAB)
+2025-12-19 22:53:26,088 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:53:26,089 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:53:26,089 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:53:27,685 - websocket.socket_handlers - INFO - Client disconnected, sid=mrWK7abG-8CTDw1nAAAB
+2025-12-19 22:53:27,689 - websocket.websocket_manager - INFO - Client disconnected from viole:systemstatus (sid=mrWK7abG-8CTDw1nAAAB)
+2025-12-19 22:53:28,614 - websocket.socket_handlers - INFO - Client connected, sid=quK-f93qHtz19FDTAAAD
+2025-12-19 22:53:28,670 - websocket.socket_handlers - INFO - Subscribe requested: sid=quK-f93qHtz19FDTAAAD, sysname=viole, topic=systemstatus
+2025-12-19 22:53:28,671 - websocket.websocket_manager - INFO - Client connected to viole:systemstatus (sid=quK-f93qHtz19FDTAAAD)
+2025-12-19 22:53:40,195 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=mrWK7abG-8CTDw1nAAAB
+2025-12-19 22:53:40,686 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:53:40,688 - notifications.udp_listener - INFO - New data for viole, metric_count: 102
+2025-12-19 22:53:40,688 - __main__ - INFO - [QueryService] New data notification for viole, metric_count: 102
+2025-12-19 22:53:40,689 - __main__ - INFO - [QueryService] Streaming systemstatus to subscribers
+2025-12-19 22:53:43,190 - websocket.socket_handlers - INFO - Sent initial systemstatus data to sid=quK-f93qHtz19FDTAAAD
+2025-12-19 22:53:54,121 - notifications.udp_listener - INFO - Stopping...
+2025-12-19 22:53:54,122 - notifications.udp_listener - INFO - Socket closed
+2025-12-19 22:53:54,123 - notifications.udp_listener - INFO - Waiting for thread to finish...
+2025-12-19 22:53:55,125 - services.topic_service - DEBUG - [TopicService] Successfully streamed systemstatus data to clients
+2025-12-19 22:53:55,126 - notifications.udp_listener - INFO - Listen loop ended
+2025-12-19 22:53:55,128 - notifications.udp_listener - INFO - Thread finished
+2025-12-19 22:53:55,130 - __main__ - INFO - [Main] Flask app shutdown

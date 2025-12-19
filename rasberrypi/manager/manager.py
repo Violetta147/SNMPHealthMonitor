@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import socket
+import logging
 from datetime import datetime
 from typing import Dict, Any
 
@@ -10,6 +11,11 @@ from typing import Dict, Any
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
+
+# Logging 
+from utils.logging import configure_logger
+logger = configure_logger(__name__)
+logger.setLevel(level=logging.INFO)
 
 # Collectors imports
 from collectors.snmp import fetch_snmp_metrics
@@ -43,7 +49,7 @@ def _notify_new_data(sysname: str, metric_count: int):
         sock.sendto(message, (get_notify_host(), get_notify_port()))
         sock.close()
     except Exception:
-        pass
+        logger.error("Failed to send notification to query service")
 
 
 def main():
@@ -60,8 +66,7 @@ def main():
                 
                 # Resolve OIDs file path before passing to snmp collector
                 oids_file_path = get_oids_file_path(snmp_oids_file)
-                print(f"[DEBUG] Resolved OIDs file path: {oids_file_path}")
-                
+
                 metrics = fetch_snmp_metrics(snmp_agent, snmp_port, snmp_community, snmp_version, oids_file_path)
                 
                 sysname = None
@@ -73,7 +78,7 @@ def main():
                 
                 # Nếu không có sys.name, không thể tiếp tục
                 if not sysname:
-                    print(f"[ERROR] Cannot get sys.name from SNMP agent {snmp_agent}")
+                    logger.error(f"Cannot get sys.name from SNMP agent {snmp_agent}")
                     time.sleep(pull_interval)
                     continue
                 
@@ -97,6 +102,7 @@ def main():
             except Exception:
                 import traceback
                 traceback.print_exc()
+                logger.error("Exception in main loop", exc_info=True)
             
             time.sleep(pull_interval)
             

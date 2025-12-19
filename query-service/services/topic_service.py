@@ -1,6 +1,7 @@
 from typing import Optional
 from datetime import datetime
-
+from unittest import result
+import logging
 from db.queries import (
     get_system_metrics,
     get_cpu_metrics,
@@ -12,6 +13,10 @@ from db.queries import (
     get_temperature_metrics,
 )
 from websocket.websocket_manager import ws_manager
+from utils.logging import configure_logger
+
+logger = configure_logger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 def get_topic_data(
@@ -37,47 +42,42 @@ def get_topic_data(
     - Otherwise, Snapshot Mode is used (latest data for real-time dashboard)
     - Downsampling is automatically applied based on time range duration (500-1000 points target)
     """
-    print(
-        f"[TopicService] Fetching {topic} data for {sysname}, "
-        f"page={page}, per_page={per_page}, "
-        f"start_time={start_time}, end_time={end_time}"
-    )
-
     try:
         if topic == "systemstatus":
-            print(f"[TopicService] Aggregating status (no disk usage) for {sysname}")
-            return get_status_metrics(
+            data = get_status_metrics(
                 sysname,
                 start_time=start_time,
                 end_time=end_time
             )
+            return data
         elif topic == "network":
-            return get_network_metrics(
+            data = get_network_metrics(
                 sysname,
                 start_time=start_time,
                 end_time=end_time
             )
+            return data
         elif topic == "disk":
-            return get_disk_metrics(
+            data = get_disk_metrics(
                 sysname,
                 start_time=start_time,
                 end_time=end_time
             )
+            return data
         elif topic == "diskio":
-            return get_disk_io_metrics(
+            data = get_disk_io_metrics(
                 sysname,
-                start_time=start_time,
-                end_time=end_time,
                 page=page,
                 per_page=per_page,
+                start_time=start_time,
+                end_time=end_time
             )
+            return data
         else:
-            print(f"[TopicService] Unknown topic: {topic}")
+            logger.debug(f"[TopicService] Unknown topic: {topic}")
             return {}
     except Exception as e:
-        print(f"[TopicService] Error fetching {topic} data: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.error(f"[TopicService] Error fetching {topic} data: {e}", exc_info=True)
         return {}
 
 
@@ -89,10 +89,6 @@ def stream_topic_data(
 ) -> None:
     """Query database and stream data to subscribed clients (real-time updates, Snapshot Mode)."""
     try:
-        print(
-            f"[TopicService] Streaming {topic} data for {sysname}, "
-            f"page={page}, per_page={per_page}"
-        )
         # Real-time updates use Snapshot Mode (no start_time)
         data = get_topic_data(
             sysname,
@@ -101,10 +97,9 @@ def stream_topic_data(
             per_page=per_page,
         )
         ws_manager.stream_data(sysname, topic, data)
-        print(f"[TopicService] Successfully streamed {topic} data to clients")
+        logger.debug(f"[TopicService] Successfully streamed {topic} data to clients")
     except Exception as e:
-        print(f"[TopicService] Error streaming {topic}: {e}")
+        logger.error(f"[TopicService] Error streaming {topic}: {e}", exc_info=True)
         import traceback
         traceback.print_exc()
-
 

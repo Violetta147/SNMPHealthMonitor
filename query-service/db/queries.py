@@ -901,11 +901,14 @@ def get_status_metrics(
         memory_part = get_memory_metrics(sysname, start_time=start_time, end_time=end_time)
         cpu_part = get_cpu_metrics(sysname, start_time=start_time, end_time=end_time)
         temperature_part = get_temperature_metrics(sysname, start_time=start_time, end_time=end_time)
-        
+        memory_history = get_memory_history(sysname, start_time=start_time, end_time=end_time)
+        memory_percent_history = get_memory_percent_history(sysname, start_time=start_time, end_time=end_time)
         # Merge parts (keys are distinct: system_info, load_avg, memory, swap, cpu_percent, temperature)
         status.update(system_part or {})
         status.update(memory_part or {})
         status.update(cpu_part or {})
+        status['memory_history'] = memory_history
+        status['memory_percent_history'] = memory_percent_history
         
         # Merge temperature (overwrite device_info if exists, but that's fine)
         if temperature_part.get('temperature'):

@@ -1,6 +1,6 @@
 import time
 from typing import Set, Dict, List
-
+from utils.logging import configure_logger
 
 class WebSocketManager:
     def __init__(self):
@@ -10,6 +10,7 @@ class WebSocketManager:
         self.topic_websockets: Dict[str, Set[str]] = {}
         # Reverse mapping: sid -> topic_key
         self.websocket_topic: Dict[str, str] = {}
+        self.logger = configure_logger(__name__)
 
     def connect(self, sid: str, sysname: str, topic: str):
         """
@@ -24,7 +25,7 @@ class WebSocketManager:
 
         self.websocket_topic[sid] = topic_key
 
-        print(f"[WebSocketManager] Client connected to {topic_key} (sid={sid})")
+        self.logger.info(f"Client connected to {topic_key} (sid={sid})")
 
     def disconnect(self, sid: str):
         """Ngắt kết nối Socket.IO client và cleanup tất cả references."""
@@ -38,9 +39,9 @@ class WebSocketManager:
 
             del self.websocket_topic[sid]
 
-            print(f"[WebSocketManager] Client disconnected from {topic_key} (sid={sid})")
+            self.logger.info(f"Client disconnected from {topic_key} (sid={sid})")
         else:
-            print(f"[WebSocketManager] Client disconnected (topic not found, sid={sid})")
+            self.logger.warning(f"Client disconnected (topic not found, sid={sid})")
 
     def stream_data(self, sysname: str, topic: str, data: dict):
         """
@@ -53,7 +54,7 @@ class WebSocketManager:
         subscribed_websockets = self.topic_websockets.get(topic_key, set())
 
         if not subscribed_websockets:
-            print(f"[WebSocketManager] No websockets for {topic_key}, skipping data stream")
+            self.logger.debug(f"No websockets for {topic_key}, skipping data stream")
             return
 
         message = {
@@ -63,22 +64,22 @@ class WebSocketManager:
             "data": data,
         }
 
-        print(
-            f"[WebSocketManager] Streaming {topic} data to "
+        self.logger.debug(
+            f"Streaming {topic} data to "
             f"{len(subscribed_websockets)} client(s) for {topic_key}"
         )
 
         if self.sio is None:
-            print("[WebSocketManager] Socket.IO server not attached, cannot stream data")
+            self.logger.error("Socket.IO server not attached, cannot stream data")
             return
 
         # Emit đến từng client; Flask-SocketIO emit là thread-safe
         for sid in list(subscribed_websockets):
             try:
                 self.sio.emit("data", message, to=sid)
-                print(f"[WebSocketManager] Successfully emitted {topic} data to sid={sid}")
+                self.logger.debug(f"Successfully emitted {topic} data to sid={sid}")
             except Exception as e:
-                print(f"[WebSocketManager] Error emitting data to sid={sid}: {e}")
+                self.logger.error(f"Error emitting data to sid={sid}: {e}")
 
     def get_active_topics(self, sysname: str) -> List[str]:
         """
@@ -91,10 +92,8 @@ class WebSocketManager:
                 topic_name = topic_key.split(":", 1)[1]
                 if topic_name not in active_topics:
                     active_topics.append(topic_name)
-        print(f"[WebSocketManager] Active topics for {sysname}: {active_topics}")
+        self.logger.debug(f"Active topics for {sysname}: {active_topics}")
         return active_topics
 
 
 ws_manager = WebSocketManager()
-
-
