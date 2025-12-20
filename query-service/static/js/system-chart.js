@@ -8,7 +8,7 @@ export function createRAMUsageChart(container, totalRAMBytes) {
         console.error('[SystemCharts] ApexCharts is not loaded. Make sure the CDN script is included.');
         return null;
     }
-
+    //[X]
     const totalRAMGB = Number.isFinite(totalRAMBytes) && totalRAMBytes > 0
         ? totalRAMBytes / (1024 * 1024 * 1024)
         : undefined;
@@ -53,7 +53,7 @@ export function createRAMUsageChart(container, totalRAMBytes) {
             show: true,
             borderColor: '#333',
             strokeDashArray: 3,
-            padding: { left: 20, right: 20, top: 10, bottom: 0 }
+            padding: { left: 70, right: 20, top: 10, bottom: 0 }
         },
         xaxis: {
             type: 'datetime',
@@ -74,19 +74,22 @@ export function createRAMUsageChart(container, totalRAMBytes) {
             min: 0,
             max: Number.isFinite(totalRAMGB) ? totalRAMGB : undefined,
             labels: {
+                show: true,
                 style: { colors: '#aaa', fontSize: '12px' },
-                formatter: (v) => `${v.toFixed(1)} GiB`,
+                formatter: (v) => Number.isFinite(v) ? `${v.toFixed(1)} GB` : '',
                 minWidth: 60,
                 offsetX: 0
             },
             forceNiceScale: true,
-            tickAmount: 5
+            tickAmount: 5,
+            axisBorder: { show: true, color: '#444' },
+            axisTicks: { show: true, color: '#444' }
         },
         tooltip: {
             theme: 'dark',
             x: { format: 'HH:mm:ss' },
             y: {
-                formatter: (v) => `${v.toFixed(2)} GiB`
+                formatter: (v) => `${v.toFixed(2)} GB`
             }
         },
         legend: { show: false }
@@ -279,16 +282,15 @@ export function createCpuNetworkChart(container) {
         },
         series: [
             { name: 'CPU %', type: 'area', data: [] },
-            { name: 'Upload', type: 'line', data: [] },
-            { name: 'Download', type: 'line', data: [] }
+            { name: 'Throughput', type: 'line', data: [] }
         ],
-        colors: ['#39ff14', '#ff6b35', '#29b6f6'],
+        colors: ['#39ff14', '#29b6f6'],
         stroke: {
             curve: 'smooth',
-            width: [3, 2, 2]
+            width: [4, 2]
         },
         fill: {
-            type: ['gradient', 'solid', 'solid'],
+            type: ['gradient', 'solid'],
             gradient: {
                 shade: 'dark',
                 type: 'vertical',
@@ -333,7 +335,7 @@ export function createCpuNetworkChart(container) {
             },
             {
                 opposite: true,
-                title: { text: 'Network', style: { color: '#29b6f6', fontSize: '12px' } },
+                title: { text: 'Throughput', style: { color: '#29b6f6', fontSize: '12px' } },
                 min: 0,
                 labels: {
                     style: { colors: '#29b6f6', fontSize: '11px' },
@@ -404,47 +406,78 @@ function formatNetworkRate(bytesPerSec) {
 
 /**
  * Update CPU + Network chart with new data
+ * - Network is shown as a single Throughput line (send + recv)
+ * - Optional autoZoomCpu toggles dynamic CPU Y-axis range
  */
-export function updateCpuNetworkChart(chart, cpuData, networkData) {
+export function updateCpuNetworkChart(chart, cpuData, networkData, autoZoomCpu = false) {
     if (!chart) return;
-    
-    // Determine max network rate to set consistent unit
-    let maxRate = 0;
-    (networkData || []).forEach(d => {
-        maxRate = Math.max(maxRate, Number(d.send_rate) || 0, Number(d.recv_rate) || 0);
-    });
-    determineNetworkUnit(maxRate);
-    
+
+    // CPU points (0-100%)
     const cpuPoints = (cpuData || []).map(d => ({
         x: new Date(d.time).getTime(),
         y: Number(d.percent) || 0
     }));
-    
-    const uploadPoints = (networkData || []).map(d => ({
-        x: new Date(d.time).getTime(),
-        y: Number(d.send_rate) || 0
-    }));
-    
-    const downloadPoints = (networkData || []).map(d => ({
-        x: new Date(d.time).getTime(),
-        y: Number(d.recv_rate) || 0
-    }));
-    
-    // Update Y-axis title with current unit
+
+    // Throughput = send_rate + recv_rate
+    let maxRate = 0;
+    const throughputPoints = (networkData || []).map(d => {
+        const send = Number(d.send_rate) || 0;
+        const recv = Number(d.recv_rate) || 0;
+        const total = send + recv;
+        if (total > maxRate) maxRate = total;
+        return {
+            x: new Date(d.time).getTime(),
+            y: total
+        };
+    });
+    determineNetworkUnit(maxRate);
+
+    // CPU Y-axis range: default 0-100, optionally auto-zoom
+    let cpuMin = 0;
+    let cpuMax = 100;
+    if (autoZoomCpu && cpuPoints.length > 0) {
+        const values = cpuPoints.map(p => p.y);
+        let localMin = Math.min(...values);
+        let localMax = Math.max(...values);
+
+        if (localMin === localMax) {
+            const pad = Math.max(5, localMax * 0.2);
+            localMin = Math.max(0, localMin - pad);
+            localMax = Math.min(100, localMax + pad);
+        } else {
+            const span = localMax - localMin;
+            const pad = Math.max(5, span * 0.2);
+            localMin = Math.max(0, localMin - pad);
+            localMax = Math.min(100, localMax + pad);
+        }
+
+        cpuMin = localMin;
+        cpuMax = localMax;
+    }
+
+    const currentYaxes = chart.w.config.yaxis || [];
+
+    // Update Y-axes: CPU % and Throughput (with unit)
     chart.updateOptions({
         yaxis: [
-            chart.w.config.yaxis[0],
             {
-                ...chart.w.config.yaxis[1],
-                title: { text: `Network (${_networkUnit})`, style: { color: '#29b6f6', fontSize: '12px' } }
+                ...(currentYaxes[0] || {}),
+                min: cpuMin,
+                max: cpuMax
+            },
+            {
+                ...(currentYaxes[1] || {}),
+                title: {
+                    text: `Throughput (${_networkUnit})`,
+                    style: { color: '#29b6f6', fontSize: '12px' }
+                }
             }
         ]
     }, false, false);
-    
+
     chart.updateSeries([
         { name: 'CPU %', data: cpuPoints },
-        { name: 'Upload', data: uploadPoints },
-        { name: 'Download', data: downloadPoints }
+        { name: 'Throughput', data: throughputPoints }
     ], true);
 }
 

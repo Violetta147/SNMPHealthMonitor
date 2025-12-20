@@ -89,7 +89,10 @@
             <!-- CPU + Network Combined Chart Section -->
             <section class="details-section">
                 <div class="detail-card">
-                    <h3 class="detail-title">CPU & Network Activity</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="detail-title">CPU & Network Activity</h3>
+                        <button id="cpu-autozoom-toggle" style="padding: 4px 8px; font-size: 0.8rem; border-radius: 3px; border: 1px solid #555; background: #222; color: #ddd; cursor: pointer;">Auto-zoom CPU Y-axis: Off</button>
+                    </div>
                     <div id="cpu-network-chart" style="width: 100%; height: 350px;"></div>
                     <div style="display: flex; justify-content: space-around; margin-top: 10px; font-family: monospace; font-size: 0.9rem; color: #ccc;">
                         <div><span style="color: #39ff14">●</span> CPU Avg: <span id="cpu-avg-value">--%</span></div>

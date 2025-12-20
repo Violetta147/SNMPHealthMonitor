@@ -35,8 +35,6 @@ def _notify_new_data(sysname: str, metric_count: int):
     """Send UDP notification to query service (fire-and-forget)."""
     try:
         timestamp = time.time()
-        dt = datetime.fromtimestamp(timestamp)
-        
         message = json.dumps({
             'event': 'new_data',
             'sysname': sysname,
@@ -45,7 +43,7 @@ def _notify_new_data(sysname: str, metric_count: int):
         }).encode('utf-8')
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(0.1)
+        sock.settimeout(None)
         sock.sendto(message, (get_notify_host(), get_notify_port()))
         sock.close()
     except Exception:

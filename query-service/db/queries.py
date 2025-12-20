@@ -871,14 +871,26 @@ def get_cpu_network_combined(
         with conn.cursor() as cur:
             result = {'cpu': [], 'network': [], 'interfaces': []}
             
-            # Get available interfaces
-            cur.execute("""
+            # Get available interfaces (exclude loopback and virtual bridges)
+            cur.execute(
+                """
                 SELECT DISTINCT iface FROM net_io_counters
-                WHERE sysname = %s ORDER BY iface
-            """, (sysname,))
+                WHERE sysname = %s
+                  AND iface NOT IN ('lo','lo0')
+                  AND iface NOT LIKE 'Loopback%%'
+                  AND iface NOT LIKE 'docker%%'
+                  AND iface NOT LIKE 'veth%%'
+                  AND iface NOT LIKE 'br-%%'
+                  AND iface NOT LIKE 'virbr%%'
+                  AND iface NOT LIKE 'zt%%'
+                  AND iface NOT LIKE 'wg%%'
+                ORDER BY iface
+                """,
+                (sysname,),
+            )
             result['interfaces'] = [row['iface'] for row in cur.fetchall()]
             
-            # Use first interface if none specified
+            # Use first non-loopback interface if none specified
             target_iface = iface or (result['interfaces'][0] if result['interfaces'] else None)
             
             if start_time is None:
@@ -926,6 +938,51 @@ def get_cpu_network_combined(
                         ORDER BY time ASC
                     """, (sysname, target_iface, limit + 1))
                     result['network'] = serialize_rows(cur.fetchall())
+                else:
+                    # Aggregate across all non-loopback interfaces
+                    cur.execute("""
+                        WITH ranked AS (
+                            SELECT 
+                                iface,
+                                time,
+                                bytes_sent,
+                                bytes_recv,
+                                LAG(bytes_sent) OVER (PARTITION BY iface ORDER BY time) as prev_sent,
+                                LAG(bytes_recv) OVER (PARTITION BY iface ORDER BY time) as prev_recv,
+                                LAG(time) OVER (PARTITION BY iface ORDER BY time) as prev_time
+                            FROM net_io_counters
+                            WHERE sysname = %s
+                              AND iface NOT IN ('lo','lo0')
+                              AND iface NOT LIKE 'Loopback%%'
+                              AND iface NOT LIKE 'docker%%'
+                              AND iface NOT LIKE 'veth%%'
+                              AND iface NOT LIKE 'br-%%'
+                              AND iface NOT LIKE 'virbr%%'
+                              AND iface NOT LIKE 'zt%%'
+                              AND iface NOT LIKE 'wg%%'
+                        ), rates AS (
+                            SELECT 
+                                time,
+                                CASE 
+                                    WHEN prev_time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, prev_time, time) > 0 THEN
+                                        GREATEST(0, (bytes_sent - prev_sent) / (TIMESTAMPDIFF(MICROSECOND, prev_time, time) / 1e6))
+                                    ELSE 0
+                                END as send_rate,
+                                CASE 
+                                    WHEN prev_time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, prev_time, time) > 0 THEN
+                                        GREATEST(0, (bytes_recv - prev_recv) / (TIMESTAMPDIFF(MICROSECOND, prev_time, time) / 1e6))
+                                    ELSE 0
+                                END as recv_rate
+                            FROM ranked
+                            WHERE prev_time IS NOT NULL
+                        )
+                        SELECT time, SUM(send_rate) as send_rate, SUM(recv_rate) as recv_rate
+                        FROM rates
+                        GROUP BY time
+                        ORDER BY time DESC
+                        LIMIT %s
+                    """, (sysname, limit))
+                    result['network'] = list(reversed(serialize_rows(cur.fetchall())))
             else:
                 # Range Mode with downsampling
                 end_time = end_time or datetime.now()
@@ -972,6 +1029,51 @@ def get_cpu_network_combined(
                             ORDER BY time ASC
                         """, (sysname, target_iface, start_time, end_time))
                         result['network'] = serialize_rows(cur.fetchall())
+                    else:
+                        # Aggregate across all non-loopback interfaces
+                        cur.execute("""
+                            WITH ranked AS (
+                                SELECT 
+                                    iface,
+                                    time,
+                                    bytes_sent,
+                                    bytes_recv,
+                                    LAG(bytes_sent) OVER (PARTITION BY iface ORDER BY time) as prev_sent,
+                                    LAG(bytes_recv) OVER (PARTITION BY iface ORDER BY time) as prev_recv,
+                                    LAG(time) OVER (PARTITION BY iface ORDER BY time) as prev_time
+                                FROM net_io_counters
+                                WHERE sysname = %s 
+                                  AND time >= %s AND time <= %s
+                                  AND iface NOT IN ('lo','lo0')
+                                  AND iface NOT LIKE 'Loopback%%'
+                                  AND iface NOT LIKE 'docker%%'
+                                  AND iface NOT LIKE 'veth%%'
+                                  AND iface NOT LIKE 'br-%%'
+                                  AND iface NOT LIKE 'virbr%%'
+                                  AND iface NOT LIKE 'zt%%'
+                                  AND iface NOT LIKE 'wg%%'
+                            ), rates AS (
+                                SELECT 
+                                    time,
+                                    CASE 
+                                        WHEN prev_time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, prev_time, time) > 0 THEN
+                                            GREATEST(0, (bytes_sent - prev_sent) / (TIMESTAMPDIFF(MICROSECOND, prev_time, time) / 1e6))
+                                        ELSE 0
+                                    END as send_rate,
+                                    CASE 
+                                        WHEN prev_time IS NOT NULL AND TIMESTAMPDIFF(MICROSECOND, prev_time, time) > 0 THEN
+                                            GREATEST(0, (bytes_recv - prev_recv) / (TIMESTAMPDIFF(MICROSECOND, prev_time, time) / 1e6))
+                                        ELSE 0
+                                    END as recv_rate
+                                FROM ranked
+                                WHERE prev_time IS NOT NULL
+                            )
+                            SELECT time, SUM(send_rate) as send_rate, SUM(recv_rate) as recv_rate
+                            FROM rates
+                            GROUP BY time
+                            ORDER BY time ASC
+                        """, (sysname, start_time, end_time))
+                        result['network'] = serialize_rows(cur.fetchall())
                 else:
                     # Aggregated CPU data
                     cur.execute(f"""
@@ -1011,6 +1113,35 @@ def get_cpu_network_combined(
                             ORDER BY time_bucket ASC
                         """, (sysname, target_iface, start_time, end_time))
                         result['network'] = serialize_rows(cur.fetchall())
+                    else:
+                        # Aggregate across all non-loopback interfaces per bucket
+                        cur.execute(f"""
+                            SELECT 
+                                time_bucket as time,
+                                SUM(send_delta) / {interval} as send_rate,
+                                SUM(recv_delta) / {interval} as recv_rate
+                            FROM (
+                                SELECT 
+                                    iface,
+                                    FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV {interval}) * {interval}) as time_bucket,
+                                    GREATEST(0, MAX(bytes_sent) - MIN(bytes_sent)) as send_delta,
+                                    GREATEST(0, MAX(bytes_recv) - MIN(bytes_recv)) as recv_delta
+                                FROM net_io_counters
+                                WHERE sysname = %s AND time >= %s AND time <= %s
+                                  AND iface NOT IN ('lo','lo0')
+                                  AND iface NOT LIKE 'Loopback%%'
+                                  AND iface NOT LIKE 'docker%%'
+                                  AND iface NOT LIKE 'veth%%'
+                                  AND iface NOT LIKE 'br-%%'
+                                  AND iface NOT LIKE 'virbr%%'
+                                  AND iface NOT LIKE 'zt%%'
+                                  AND iface NOT LIKE 'wg%%'
+                                GROUP BY iface, FROM_UNIXTIME((UNIX_TIMESTAMP(time) DIV {interval}) * {interval})
+                            ) per_iface
+                            GROUP BY time_bucket
+                            ORDER BY time_bucket ASC
+                        """, (sysname, start_time, end_time))
+                        result['network'] = serialize_rows(cur.fetchall())
             
             return result
 
@@ -1046,15 +1177,16 @@ def get_status_metrics(
         temperature_part = get_temperature_metrics(sysname, start_time=start_time, end_time=end_time)
         memory_history = get_memory_history(sysname, start_time=start_time, end_time=end_time)
         memory_percent_history = get_memory_percent_history(sysname, start_time=start_time, end_time=end_time)
+        cpu_network_part = get_cpu_network_combined(sysname, start_time=start_time, end_time=end_time)
 
-        # History: return DB results as-is. Do not generate or backfill dummy points.
-        # Merge parts (keys are distinct: system_info, load_avg, memory, swap, cpu_percent, temperature)
+        # Merge parts (keys are distinct: system_info, load_avg, memory, swap, cpu_percent, temperature, cpu, network)
         status.update(system_part or {})
         status.update(memory_part or {})
         status.update(cpu_part or {})
+        status.update(cpu_network_part or {})
         status['memory_history'] = memory_history
         status['memory_percent_history'] = memory_percent_history
-        
+
         # Merge temperature (overwrite device_info if exists, but that's fine)
         if temperature_part.get('temperature'):
             status['temperature'] = temperature_part['temperature']

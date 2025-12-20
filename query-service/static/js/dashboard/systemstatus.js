@@ -9,6 +9,7 @@ export class SystemStatusDashboard extends BaseDashboardUI {
     constructor(dataProcessor) {
         super(dataProcessor);
         this.cpuCoresInitialized = false;
+        this.autoZoomCpu = false;
 
         // Initialize charts ONCE on page load (total RAM line will be set later when available)
         if (!this.isInitialized) {
@@ -45,7 +46,7 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         const n = Number(bytes || 0);
         if (!Number.isFinite(n) || n <= 0) return '0 bytes';
         const k = 1024;
-        const units = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
+        const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.min(units.length - 1, Math.floor(Math.log(n) / Math.log(k)));
         if (i === 0) return `${Math.round(n)} bytes`;
         const v = n / Math.pow(k, i);
@@ -80,6 +81,16 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         this.registerElement('temperature-gauge', '#temperature-gauge');
         this.registerElement('temperature-value', '#temperature-value');
         this.registerElement('temperature-info', '#temperature-info');
+
+        const cpuZoomBtn = document.getElementById('cpu-autozoom-toggle');
+        if (cpuZoomBtn) {
+            cpuZoomBtn.addEventListener('click', () => {
+                this.autoZoomCpu = !this.autoZoomCpu;
+                cpuZoomBtn.textContent = this.autoZoomCpu
+                    ? 'Auto-zoom CPU Y-axis: On'
+                    : 'Auto-zoom CPU Y-axis: Off';
+            });
+        }
     }
 
     /**
@@ -220,38 +231,13 @@ export class SystemStatusDashboard extends BaseDashboardUI {
             this.updateText('temperature-value', 'N/A');
         }
 
-        // CPU + Network combined chart - fetch separately
-        if (!this._cpuNetFetching && this.sysname) {
-            this.fetchCpuNetworkData();
+        // Update CPU + Network combined chart
+        if (this.cpuNetworkChart && processedData.cpu && processedData.network) {
+            updateCpuNetworkChart(this.cpuNetworkChart, processedData.cpu, processedData.network, this.autoZoomCpu);
+            this.updateCpuNetworkSummary(processedData.cpu, processedData.network);
         }
     }
 
-    /**
-     * Fetch CPU + Network combined data
-     */
-    async fetchCpuNetworkData() {
-        if (!this.sysname) return;
-        
-        this._cpuNetFetching = true;
-        try {
-            const url = `/api/cpunetwork/${this.sysname}`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            
-            // Update chart
-            if (this.cpuNetworkChart) {
-                updateCpuNetworkChart(this.cpuNetworkChart, data.cpu, data.network);
-            }
-            
-            // Update summary values
-            this.updateCpuNetworkSummary(data.cpu, data.network);
-        } catch (err) {
-            console.warn('[SystemStatusDashboard] Failed to fetch CPU/Network data:', err);
-        } finally {
-            this._cpuNetFetching = false;
-        }
-    }
 
 
     /**
@@ -307,8 +293,7 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         if (this.cpuNetworkChart) {
             this.cpuNetworkChart.updateSeries([
                 { name: 'CPU %', data: [] },
-                { name: 'Upload', data: [] },
-                { name: 'Download', data: [] }
+                { name: 'Throughput', data: [] }
             ], true);
         }
         this._ramHistoryLoaded = false;
