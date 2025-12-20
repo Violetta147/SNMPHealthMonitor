@@ -142,14 +142,26 @@ export class SystemStatusDashboard extends BaseDashboardUI {
                 this.totalRamBytes = processedData.memory.total;
                 this.totalRamGB = this.totalRamBytes / (1024 * 1024 * 1024);
                 if (this.charts?.ramUsageChart && typeof this.charts.ramUsageChart.updateOptions === 'function') {
-                    const currentYaxis = this.charts.ramUsageChart.w?.config?.yaxis || {};
-                    this.charts.ramUsageChart.updateOptions({
-                        yaxis: {
-                            ...currentYaxis,
-                            min: 0,
-                            max: this.totalRamGB
-                        }
-                    }, false, true);
+                    const ycfg = this.charts.ramUsageChart.w?.config?.yaxis;
+                    if (Array.isArray(ycfg)) {
+                        const base = ycfg[0] || {};
+                        this.charts.ramUsageChart.updateOptions({
+                            yaxis: [{
+                                ...base,
+                                min: 0,
+                                max: this.totalRamGB
+                            }]
+                        }, false, true);
+                    } else {
+                        const base = ycfg || {};
+                        this.charts.ramUsageChart.updateOptions({
+                            yaxis: {
+                                ...base,
+                                min: 0,
+                                max: this.totalRamGB
+                            }
+                        }, false, true);
+                    }
                 }
                 this.totalRamMarkSet = true;
             }
@@ -199,16 +211,16 @@ export class SystemStatusDashboard extends BaseDashboardUI {
                 swapSummaryEl.textContent = `Swap: ${swapPct}% (${this.formatBytesIEC(swapUsed, 0)} / ${this.formatBytesIEC(swapTotal, 1)})`;
             }
 
-            // One-time debug: prove numeric types after casting
-            if (!this._debugLogged) {
-                console.log(
-                    'DEBUG DATA TYPE:',
-                    typeof formatted.ramAppUsed,
-                    formatted.ramAppUsed,
-                    { total, free, buffers, cached, used_db, appUsedBytes }
-                );
-                this._debugLogged = true;
-            }
+            // // One-time debug: prove numeric types after casting
+            // if (!this._debugLogged) {
+            //     console.log(
+            //         'DEBUG DATA TYPE:',
+            //         typeof formatted.ramAppUsed,
+            //         formatted.ramAppUsed,
+            //         { total, free, buffers, cached, used_db, appUsedBytes }
+            //     );
+            //     this._debugLogged = true;
+            // }
 
             this.charts.dataManager.updateChart(this.charts.ramUsageChart, {
                 0: this.ramAppUsedData

@@ -4,100 +4,98 @@
 
 export function createRAMUsageChart(container, totalRAMBytes) {
     if (!container) return null;
-    if (typeof ApexCharts === 'undefined') {
-        console.error('[SystemCharts] ApexCharts is not loaded. Make sure the CDN script is included.');
-        return null;
+    if (typeof ApexCharts === 'undefined') return null;
+
+    // 1. Xử lý Total RAM: Làm tròn lên số nguyên gần nhất (ví dụ 3.8GB -> 4GB) để chia vạch cho đẹp
+    let maxRAM = 4; // Default an toàn
+    if (Number.isFinite(totalRAMBytes) && totalRAMBytes > 0) {
+        const exactGB = totalRAMBytes / (1024 * 1024 * 1024);
+        maxRAM = Math.ceil(exactGB); // 3.8 -> 4.0
     }
-    //[X]
-    const totalRAMGB = Number.isFinite(totalRAMBytes) && totalRAMBytes > 0
-        ? totalRAMBytes / (1024 * 1024 * 1024)
-        : undefined;
 
     const options = {
         chart: {
             type: 'area',
             height: 300,
-            animations: {
-                enabled: true,
-                easing: 'easeinout',
-                speed: 350
-            },
+            animations: { enabled: true, easing: 'linear', speed: 300 },
             toolbar: { show: false },
             zoom: { enabled: false },
             background: 'transparent',
             fontFamily: 'Consolas, monospace'
         },
-        series: [
-            {
-                name: 'Used',
-                data: []
-            }
-        ],
-        colors: ['#4dbd74'],
+        series: [{ name: 'Used', data: [] }],
+        colors: ['#4dbd74'], // Màu xanh lá đặc trưng cho RAM
+        
         stroke: {
             curve: 'smooth',
             width: 2
         },
+        
         fill: {
             type: 'gradient',
             gradient: {
                 shade: 'dark',
                 type: 'vertical',
-                opacityFrom: 0.7,
-                opacityTo: 0.15,
-                stops: [0, 80, 100]
+                opacityFrom: 0.6,
+                opacityTo: 0.1,
+                stops: [0, 100]
             }
         },
+        
         dataLabels: { enabled: false },
+        
+        // QUAN TRỌNG: Sửa padding lại về chuẩn
         grid: {
             show: true,
             borderColor: '#333',
             strokeDashArray: 3,
-            padding: { left: 70, right: 20, top: 10, bottom: 0 }
+            // Xóa dòng left: 70 đi, để mặc định hoặc chỉ padding nhỏ
+            padding: { left: 10, right: 10, top: 10, bottom: 0 } 
         },
+        
         xaxis: {
             type: 'datetime',
             labels: {
                 datetimeUTC: false,
                 style: { colors: '#aaa', fontSize: '11px' },
-                datetimeFormatter: {
-                    hour: 'HH:mm:ss',
-                    minute: 'HH:mm:ss',
-                    second: 'HH:mm:ss'
-                }
+                datetimeFormatter: { hour: 'HH:mm:ss', minute: 'HH:mm:ss', second: 'HH:mm:ss' }
             },
-            axisBorder: { color: '#444' },
+            axisBorder: { show: false },
             axisTicks: { color: '#444' },
             tooltip: { enabled: false }
         },
+        
         yaxis: {
             min: 0,
-            max: Number.isFinite(totalRAMGB) ? totalRAMGB : undefined,
+            max: maxRAM, // Sử dụng số đã làm tròn (ví dụ 4)
+            tickAmount: 4, // Chia thành 4 khoảng (0, 1, 2, 3, 4) rất đẹp
             labels: {
                 show: true,
-                style: { colors: '#aaa', fontSize: '12px' },
-                formatter: (v) => Number.isFinite(v) ? `${v.toFixed(1)} GB` : '',
-                minWidth: 60,
-                offsetX: 0
+                style: { 
+                    colors: '#4dbd74', // Đổi màu chữ sang xanh lá cho đồng bộ và rõ
+                    fontSize: '11px',
+                    fontFamily: 'Consolas, monospace'
+                },
+                formatter: (v) => `${v.toFixed(0)} GB`, // Chỉ hiện số nguyên: "1 GB" thay vì "1.23 GB"
+                offsetX: 0 
             },
-            forceNiceScale: true,
-            tickAmount: 5,
-            axisBorder: { show: true, color: '#444' },
-            axisTicks: { show: true, color: '#444' }
+            // Đảm bảo hiển thị trục dọc rõ ràng
+            axisBorder: { show: true, color: '#4dbd74', width: 1 }, 
+            axisTicks: { show: true, color: '#4dbd74' }
         },
+        
         tooltip: {
             theme: 'dark',
             x: { format: 'HH:mm:ss' },
             y: {
-                formatter: (v) => `${v.toFixed(2)} GB`
+                formatter: (v) => `${v.toFixed(2)} GB` // Tooltip vẫn hiện chi tiết số lẻ
             }
         },
         legend: { show: false }
     };
 
-    // Clean any previous instance attached to this container
-    if (container.__apexChart && typeof container.__apexChart.destroy === 'function') {
-        try { container.__apexChart.destroy(); } catch (e) { /* ignore */ }
+    if (container.__apexChart) {
+        try { container.__apexChart.destroy(); } catch (e) {}
     }
 
     const chart = new ApexCharts(container, options);
