@@ -1,6 +1,5 @@
 from typing import Optional
 from datetime import datetime
-from unittest import result
 import logging
 from db.queries import (
     get_system_metrics,
@@ -111,6 +110,10 @@ def stream_topic_data(
             page=page,
             per_page=per_page,
         )
+        #print data to logs folder
+        # with open(f"logs/{sysname}_{topic}.json", "w") as f:
+        #     json.dump(data, f)
+        
         ws_manager.stream_data(sysname, topic, data)
         logger.debug(f"[TopicService] Successfully streamed {topic} data to clients")
     except Exception as e:
