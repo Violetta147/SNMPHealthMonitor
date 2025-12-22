@@ -1,8 +1,5 @@
 from flask import Flask
 from flask_socketio import SocketIO
-import time
-from typing import Optional
-
 from config import API_HOST, API_PORT
 from notifications.udp_listener import UDPNotificationListener
 from websocket.websocket_manager import ws_manager
@@ -41,9 +38,42 @@ def on_new_data(message: dict):
 
 
 # Flask app & Socket.IO setup
-app = Flask(__name__, static_folder="static", template_folder="template")
+from datetime import timedelta
+app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config['DEBUG'] = True
-socketio = SocketIO(app, path="query-socket.io")
+app.config['SECRET_KEY'] = 'dev_secret_key_change_in_prod'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+
+
+# Absolute Path for Database
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+instance_path = os.path.join(basedir, 'instance')
+if not os.path.exists(instance_path):
+    os.makedirs(instance_path)
+
+db_path = os.path.join(instance_path, 'site.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize Extensions
+from extensions import limiter, db, socketio
+limiter.init_app(app)
+db.init_app(app)
+socketio.init_app(app) 
+
+# Create DB Tables if not exist
+with app.app_context():
+    from db.models import User
+    db.create_all()
+    # Optional: Create default admin if not exists
+    if not User.query.filter_by(username='admin').first():
+        print("Creating default admin user...")
+        u = User(username='admin')
+        u.set_password('admin')
+        db.session.add(u)
+        db.session.commit()
+
 
 # Gán server cho WebSocketManager để nó có thể emit
 ws_manager.sio = socketio
@@ -53,7 +83,13 @@ app.register_blueprint(api_bp)
 app.register_blueprint(web_bp)
 
 # Đăng ký Socket.IO event handlers
-register_socketio_events(socketio, ws_manager, get_topic_data)
+# Clients for Terminal Service (managed in main app scope)
+clients = {}
+
+# Đăng ký Socket.IO event handlers
+register_socketio_events(socketio, ws_manager, get_topic_data, clients)
+
+
 
 
 if __name__ == "__main__":
@@ -61,7 +97,7 @@ if __name__ == "__main__":
     notify_listener = UDPNotificationListener(callback=on_new_data)
     notify_listener.start()
     try:
-        socketio.run(app, host=API_HOST, port=API_PORT, debug=False)
+        socketio.run(app, host=API_HOST, port=API_PORT, debug=False, allow_unsafe_werkzeug=True)
     finally:
         notify_listener.stop()
         print("[Main] Flask app shutdown")

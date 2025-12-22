@@ -51,10 +51,8 @@ export class WebSocketManager {
         console.log('[WebSocketManager] Connecting to Socket.IO on same origin...');
 
         try {
-            // Kết nối đến cùng host/port với custom path /query-socket.io
-            this.socket = window.io({
-                path: "/query-socket.io",
-            });
+            // Kết nối đến cùng host/port với đường dẫn mặc định
+            this.socket = window.io();
 
             this.socket.on('connect', () => {
                 this.isConnected = true;
