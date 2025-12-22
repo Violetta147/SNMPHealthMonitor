@@ -45,7 +45,7 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         const n = Number(bytes || 0);
         if (!Number.isFinite(n) || n <= 0) return '0 bytes';
         const k = 1024;
-        const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+        const units = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
         const i = Math.min(units.length - 1, Math.floor(Math.log(n) / Math.log(k)));
         if (i === 0) return `${Math.round(n)} bytes`;
         const v = n / Math.pow(k, i);
@@ -53,14 +53,14 @@ export class SystemStatusDashboard extends BaseDashboardUI {
     }
 
     /**
-     * Format memory total - round UP to nearest GB like Linux free command
+     * Format memory total using binary units (GiB) with proper precision
      */
     formatMemoryTotal(bytes) {
         const n = Number(bytes || 0);
-        if (!Number.isFinite(n) || n <= 0) return '0 GB';
-        const gb = n / (1024 * 1024 * 1024);
-        // Round UP to nearest integer GB (e.g., 3.8 GB -> 4 GB)
-        return `${Math.ceil(gb)} GB`;
+        if (!Number.isFinite(n) || n <= 0) return '0 GiB';
+        const gib = n / (1024 * 1024 * 1024);
+        // Show 1 decimal place for consistency (e.g., 3.8 GiB)
+        return `${gib.toFixed(1)} GiB`;
     }
 
     /**
@@ -156,7 +156,7 @@ export class SystemStatusDashboard extends BaseDashboardUI {
                             axisTicks: { show: false },
                             labels: {
                                 style: { colors: '#4dbd74', fontSize: '11px' },
-                                formatter: (v) => `${v.toFixed(1)} GB`
+                                formatter: (v) => `${v.toFixed(1)} GiB`
                             }
                         }
                     }, false, true);
