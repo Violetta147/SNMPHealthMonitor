@@ -2,32 +2,35 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 class RealTimeTransformer:
-    """Transforms list of flattened metrics into structured JSON for frontend."""
+    """Transforms list of flattened metrics into structured JSON for frontend.
+    Now stateful to calculate rates (e.g. network throughput).
+    """
+    
+    def __init__(self):
+        # Store previous values for rate calculation
+        # {sysname: {'net_rx': val, 'net_tx': val, 'time': ts}}
+        self._prev_state: Dict[str, Dict] = {}
 
-    @staticmethod
-    def transform(topic: str, metrics: List[Dict[str, Any]], extra_context: Dict = None) -> Dict[str, Any]:
+    def transform(self, topic: str, metrics: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Main entry point.
+        Main entry point (instance method).
         Args:
             topic: systemstatus, network, disk, diskio
             metrics: List of metric objects {name, value, labels, ts}
-            extra_context: Optional dict containing metadata like {'ip_address': ...}
         """
         if not metrics:
             return {}
 
         method_name = f"_transform_{topic}"
-        transformer = getattr(RealTimeTransformer, method_name, None)
+        transformer = getattr(self, method_name, None)
         
         if transformer:
-            # Check if transformer accepts extra arguments or just pass it?
-            # Easiest is to update all handlers to accept it.
-            return transformer(metrics, extra_context=extra_context)
+            return transformer(metrics)
         return {}
 
     @staticmethod
     def _get_metric_value(metrics: List[Dict], name_suffix: str, labels: Dict = None) -> Any:
-        # Helper to find a specific metric value
+        # Helper to find a specific metric value (static is fine here but can be instance too)
         for m in metrics:
             if m['name'].endswith(name_suffix):
                 if labels:
@@ -43,18 +46,13 @@ class RealTimeTransformer:
                     return m['value']
         return None
 
-    @staticmethod
-    def _transform_systemstatus(metrics: List[Dict], extra_context: Dict = None) -> Dict:
+    def _transform_systemstatus(self, metrics: List[Dict]) -> Dict:
         # Group: system_info, load_avg, device_info
         # PLUS: cpu_percent, memory, swap (as per user requirement to map all in 4 topics)
         
         sysname = "N/A"
-        location = "N/A"
+        location = "N/A" 
         uptime = 0
-        
-        # Get IP directly from context (reliable)
-        ip_address = extra_context.get('ip_address') if extra_context else None
-        
         ts = datetime.now().isoformat()
         
         # CPU, Memory, Swap containers
@@ -66,12 +64,18 @@ class RealTimeTransformer:
         load_5m = 0
         load_15m = 0
         
+        # Network counters per interface: ifIndex -> {rx, tx, name}
+        net_counters = {}
+        
+        ts_val = 0
+        
         for m in metrics:
             name = m['name']
             val = m['value']
             
             # Timestamp (prefer latest)
             if m.get('ts'): 
+                ts_val = m['ts']
                 ts = datetime.fromtimestamp(m['ts']).isoformat()
             
             # System Info - extract from individual metrics
@@ -107,6 +111,38 @@ class RealTimeTransformer:
                  field = name.split('.')[-1]
                  swap_data[field] = val
 
+            # Network metrics - group by interface to calculate rates per interface
+            elif name.startswith('network.'):
+                if_index = m.get('labels', {}).get('ifIndex')
+                if if_index:
+                    # Filter logic: Match queries.py (Physical-like interfaces only)
+                    # We often don't have the interface NAME yet (it comes in a separate metric).
+                    # However, we build `net_counters` keyed by index.
+                    # We must verify the name matches the pattern when we process `network.interface.name`.
+                    # OR we can assume we only want to KEEP the entry if the name eventually matches.
+                    # But `network.interface.name` is just one metric in the stream.
+                    
+                    # Better approach: Collect everything first, then filter the `net_counters` dictionary before processing rates.
+                    
+                    if if_index not in net_counters:
+                        net_counters[if_index] = {
+                            'rx': 0, 'tx': 0, 
+                            'name': f"if{if_index}",
+                            'admin_status': 1, 
+                            'oper_status': 1
+                        }
+                    
+                    if name == 'network.rx_bytes_total':
+                        net_counters[if_index]['rx'] = val
+                    elif name == 'network.tx_bytes_total':
+                        net_counters[if_index]['tx'] = val
+                    elif name == 'network.interface.name':
+                        net_counters[if_index]['name'] = val
+                    elif name == 'network.interface.admin_status':
+                        net_counters[if_index]['admin_status'] = val
+                    elif name == 'network.interface.oper_status':
+                        net_counters[if_index]['oper_status'] = val
+
         # Post-process Memory
         if 'total' in mem_data:
             total = mem_data['total']
@@ -116,14 +152,25 @@ class RealTimeTransformer:
                 if f not in mem_data: mem_data[f] = 0
             
             # Validate: cap values at total (SNMP data can be invalid)
+            # CRITICAL FIX: Some Linux systems report Free = Physical Free + Swap Free
+            # If Free > Total, we must subtract Swap Free to get real Physical Free
+            if mem_data['free'] > total:
+                 swap_free = swap_data.get('free', 0)
+                 mem_data['free'] = max(0, mem_data['free'] - swap_free)
+
             mem_data['free'] = min(mem_data['free'], total)
             mem_data['cached'] = min(mem_data['cached'], total)
             mem_data['buffers'] = min(mem_data['buffers'], total)
             mem_data['available'] = min(mem_data['available'], total)
             
-            # DON'T calculate used/percent - let frontend do it
-            # Frontend xử lý: used = total - free - buffers - cached
-            # Backend chỉ gửi raw data sau khi validate
+            # Recalculate 'used' because raw SNMP used might be missing or wrong
+            # Standard Linux calculation: used = total - free - buffers - cached
+            calculated_used = total - mem_data['free'] - mem_data['buffers'] - mem_data['cached']
+            mem_data['used'] = max(0, calculated_used)
+            
+            # Also ensure 'percent' is present
+            if total > 0:
+                mem_data['percent'] = (mem_data['used'] / total) * 100
                 
         # Post-process Swap
         if 'total' in swap_data:
@@ -135,6 +182,65 @@ class RealTimeTransformer:
                 swap_data['percent'] = (swap_data['used'] / swap_data['total']) * 100
             
             if 'free' not in swap_data: swap_data['free'] = 0
+
+        # Rate Calculation (Per Interface)
+        network_data = [] # Changed to List as per user request
+        
+        if sysname != "N/A":
+            prev_all = self._prev_state.get(sysname, {})
+            current_state = {'time': ts_val, 'interfaces': {}}
+            
+            dt = 0
+            if 'time' in prev_all:
+                 dt = ts_val - prev_all['time']
+
+            # Predefined list of excluded prefixes (Loopback, Docker, Virtual, VPN)
+            EXCLUDED_PREFIXES = ['lo', 'docker', 'veth', 'br-', 'virbr', 'wg', 'zt']
+
+            for if_idx, counters in list(net_counters.items()):
+                if_name = counters['name']
+                
+                # Check consistency with Physical/Wireless pattern (e* or w*)
+                # And explicitly exclude known virtual/internal prefixes
+                is_physical = if_name.startswith('e') or if_name.startswith('w')
+                is_excluded = any(if_name.startswith(p) for p in EXCLUDED_PREFIXES)
+                
+                if not is_physical or is_excluded:
+                    continue
+
+                curr_rx = counters['rx']
+                curr_tx = counters['tx']
+                admin_status = counters['admin_status']
+                oper_status = counters['oper_status']
+                
+                # Store currents for next time
+                current_state['interfaces'][if_idx] = {'rx': curr_rx, 'tx': curr_tx}
+                
+                rx_rate = 0
+                tx_rate = 0
+                
+                if dt > 0 and 'interfaces' in prev_all and if_idx in prev_all['interfaces']:
+                     prev_if = prev_all['interfaces'][if_idx]
+                     rx_diff = curr_rx - prev_if['rx']
+                     tx_diff = curr_tx - prev_if['tx']
+                     
+                     if rx_diff >= 0: rx_rate = rx_diff / dt
+                     if tx_diff >= 0: tx_rate = tx_diff / dt
+                
+                # Push object to list
+                network_data.append({
+                    "interface": if_name,
+                    "time": ts,
+                    "bytes_sent": curr_tx,
+                    "bytes_recv": curr_rx,
+                    "if_admin_status": admin_status,
+                    "if_oper_status": oper_status,
+                    "send_bytes_s": tx_rate,
+                    "recv_bytes_s": rx_rate
+                })
+
+            # Update state
+            self._prev_state[sysname] = current_state
 
         # Post-process CPU: Convert hrDeviceIndex to sequential core numbers
         cpu_cores = []
@@ -160,18 +266,18 @@ class RealTimeTransformer:
                 'load_5m': load_5m,
                 'load_15m': load_15m
             },
+            'network': network_data,
             'cpu_percent': cpu_cores,
             'memory': mem_data if mem_data else None,
             'swap': swap_data if swap_data else None,
             'device_info': {
                 'online': True,
-                'last_seen': ts,
-                'ip_address': ip_address
+                'last_seen': ts
             }
         }
 
     @staticmethod
-    def _transform_network(metrics: List[Dict], extra_context: Dict = None) -> Dict:
+    def _transform_network(metrics: List[Dict]) -> Dict:
         # Group by ifIndex (from labels)
         iface_map = {} # ifIndex -> {interface, bytes_sent, bytes_recv, ...}
         ts = datetime.now().isoformat()
@@ -222,7 +328,7 @@ class RealTimeTransformer:
         }
 
     @staticmethod
-    def _transform_disk(metrics: List[Dict], extra_context: Dict = None) -> Dict:
+    def _transform_disk(metrics: List[Dict]) -> Dict:
         # Group by mount/device
         disk_map = {} # mount -> {total, used, free...}
         ts = datetime.now().isoformat()
@@ -266,7 +372,7 @@ class RealTimeTransformer:
         }
 
     @staticmethod
-    def _transform_diskio(metrics: List[Dict], extra_context: Dict = None) -> Dict:
+    def _transform_diskio(metrics: List[Dict]) -> Dict:
         # Group by device
         io_map = {}
         ts = datetime.now().isoformat()

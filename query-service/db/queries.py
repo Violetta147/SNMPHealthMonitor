@@ -433,7 +433,7 @@ def get_network_metrics(sysname, start_time=None, end_time=None):
                     FROM ranked
                     WHERE rn = 1
                 """, (sysname,))
-                return {'net_io': serialize_rows(cur.fetchall())}
+                return {'network': serialize_rows(cur.fetchall())}
 
             # RANGE MODE
             end_time, interval = resolve_time_range(start_time, end_time)
@@ -486,7 +486,7 @@ def get_network_metrics(sysname, start_time=None, end_time=None):
                     ORDER BY bucket
                 """, (sysname, start_time, end_time))
 
-            return {'net_io': serialize_rows(cur.fetchall())}
+            return {'network': serialize_rows(cur.fetchall())}
 
 
 

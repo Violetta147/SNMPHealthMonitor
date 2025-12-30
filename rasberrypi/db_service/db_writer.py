@@ -104,7 +104,7 @@ def _insert_cpu_percent(cur, sysname: str, labels: Dict[str, Any], value: Any, t
     logger.debug(f"[DEBUG] _insert_cpu_percent: sysname={sysname}, ts={ts}, cpu={cpu_name}, value={value}")
 
 
-def _insert_memory(cur, sysname: str, metrics_by_name: Dict[str, Tuple[Any, int]]) -> None:
+def _insert_memory(cur, sysname: str, metrics_by_name: Dict[str, Tuple[Any, int]], swap_metrics: Dict[str, Tuple[Any, int]] = None) -> None:
     # Expect names: memory.total, memory.available, memory.used, memory.free, memory.percent, memory.buffers, memory.cached, memory.shared
     ts = metrics_by_name.get("memory.total", (None, None))[1] or metrics_by_name.get("memory.available", (None, None))[1]
     if ts is None:
@@ -118,7 +118,9 @@ def _insert_memory(cur, sysname: str, metrics_by_name: Dict[str, Tuple[Any, int]
     free_mem = metrics_by_name.get("memory.free", (None, ts))[0]
     
     # Get swap.free for normalization
-    swap_free = metrics_by_name.get("swap.free", (None, ts))[0]
+    swap_free = None
+    if swap_metrics:
+        swap_free = swap_metrics.get("swap.free", (None, None))[0]
     
     # CRITICAL: Normalize free when it includes Swap
     # Formula: memFree (Physical) = memTotalFree (SNMP) - memSwapFree (SNMP)
@@ -386,7 +388,7 @@ def write_metrics_batch(conn, sysname: str, metrics: List[Dict[str, Any]]) -> No
         if load_avg_group:
             _insert_load_avg_batch(cur, sysname, load_avg_group)
         if mem_group:
-            _insert_memory(cur, sysname, mem_group)
+            _insert_memory(cur, sysname, mem_group, swap_group)
         if swap_group:
             _insert_swap(cur, sysname, swap_group)
         if sys_info_group:

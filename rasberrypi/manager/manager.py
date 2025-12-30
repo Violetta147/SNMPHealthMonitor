@@ -53,10 +53,11 @@ def _notify_new_data(sysname: str, metric_count: int, ip_address: str, metrics: 
 
 
 def main():
+    conn = None
     try:
         while True:
             try:
-                # Get config values each loop (in case they change)
+                # Get config values
                 snmp_agent = get_snmp_agent()
                 snmp_port = get_snmp_port()
                 snmp_community = get_snmp_community()
@@ -64,9 +65,10 @@ def main():
                 snmp_oids_file = get_snmp_oids_file()
                 pull_interval = get_pull_interval()
                 
-                # Resolve OIDs file path before passing to snmp collector
+                # Resolve OIDs path (now cached in snmp collector)
                 oids_file_path = get_oids_file_path(snmp_oids_file)
 
+                # Fetch (caching logic inside collector prevents redraw)
                 metrics = fetch_snmp_metrics(snmp_agent, snmp_port, snmp_community, snmp_version, oids_file_path)
                 
                 sysname = None
@@ -76,31 +78,43 @@ def main():
                         if sysname:
                             break
                 
-                # Nếu không có sys.name, không thể tiếp tục
                 if not sysname:
                     logger.error(f"Cannot get sys.name from SNMP agent {snmp_agent}")
                     time.sleep(pull_interval)
                     continue
                 
                 valid_metrics = [m for m in metrics if m.get('ts') is not None]
-                # log valid metrics to file
-                # with open('valid_metrics.json', 'w') as f:
-                #     json.dump(valid_metrics, f, indent=4)
                 
                 if valid_metrics:
-                    conn = get_connection()
-                    try:
-                        upsert_device(conn, sysname=sysname, ip_address=snmp_agent)
-                        write_metrics_batch(conn, sysname, valid_metrics)
-                        conn.commit()
-                        _notify_new_data(sysname, len(valid_metrics), snmp_agent, valid_metrics)
-                    except Exception:
-                        conn.rollback()
-                    finally:
+                    # Persistent Connection Logic
+                    if conn is None:
                         try:
-                            conn.close()
-                        except Exception:
+                            # Only log when actually connecting
+                            conn = get_connection()
+                        except Exception as e:
+                            logger.error(f"Failed to connect to DB: {e}")
+                            # Will retry next loop
                             pass
+
+                    # Need a valid connection to proceed
+                    if conn:
+                        try:
+                            _notify_new_data(sysname, len(valid_metrics), snmp_agent, valid_metrics)
+                            upsert_device(conn, sysname=sysname, ip_address=snmp_agent)
+                            write_metrics_batch(conn, sysname, valid_metrics)
+                            conn.commit()
+                        except Exception as e:
+                            logger.error(f"DB Operation failed: {e}")
+                            try:
+                                conn.rollback()
+                            except:
+                                pass
+                            # Force reconnect next time
+                            try:
+                                conn.close()
+                            except:
+                                pass
+                            conn = None
                 
             except Exception:
                 import traceback
@@ -114,4 +128,8 @@ def main():
     except Exception:
         pass
     finally:
-        pass
+        if conn:
+            try:
+                conn.close()
+            except:
+                pass

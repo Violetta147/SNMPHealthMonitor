@@ -29,8 +29,17 @@ except Exception as e:
 
 
 
+# Global cache for OIDs to avoid re-reading file every cycle
+_OIDS_CACHE: List[Dict[str, Any]] = None
+
+
 def _load_oids(oids_file_path: str) -> List[Dict[str, Any]]:
-    """Load OIDs from file. Expects absolute or relative path already resolved."""
+    """Load OIDs from file with caching. Expects absolute or relative path already resolved."""
+    global _OIDS_CACHE
+    
+    if _OIDS_CACHE is not None:
+        return _OIDS_CACHE
+
     print(f"[DEBUG] Loading OIDs from: {oids_file_path}")
     
     with open(oids_file_path, 'r', encoding='utf-8') as f:
@@ -38,7 +47,9 @@ def _load_oids(oids_file_path: str) -> List[Dict[str, Any]]:
     # Expected format: [{"name": "cpu.load1", "oid": "1.3...", "unit": "unitless", "type": "gauge", "labels": {}}]
     if not isinstance(data, list):
         raise ValueError("SNMP OIDs file must contain a list of OID mappings")
-    return data
+    
+    _OIDS_CACHE = data
+    return _OIDS_CACHE
 
 
 _UNIT_MAP = {

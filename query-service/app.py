@@ -10,6 +10,9 @@ from web.router import web_bp
 
 from utils.data_transformer import RealTimeTransformer
 
+# Global transformer instance (stateful)
+transformer_instance = RealTimeTransformer()
+
 # UDP notification callback
 def on_new_data(message: dict):
     """When new data arrives, stream it to all subscribed clients."""
@@ -39,9 +42,12 @@ def on_new_data(message: dict):
             if metrics and topic in ['systemstatus', 'network', 'disk', 'diskio']:
                 try:
                     # print(f"[QueryService] Transforming metrics for {topic}")
-                    extra_context = {'ip_address': ip_address} if ip_address else {}
-                    transformed_data = RealTimeTransformer.transform(topic, metrics, extra_context)
+                    transformed_data = transformer_instance.transform(topic, metrics)
                     if transformed_data:
+                        # Attach IP from UDP message directly to payload
+                        if ip_address and 'device_info' in transformed_data:
+                            transformed_data['device_info']['ip_address'] = ip_address
+                            
                         ws_manager.stream_data(sysname, topic, transformed_data)
                         continue # Skip DB query
                 except Exception as e:

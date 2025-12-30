@@ -268,8 +268,11 @@ export function createCpuNetworkChart(container) {
             toolbar: { show: false },
             zoom: { enabled: false },
             background: 'transparent',
+            zoom: { enabled: false },
+            background: 'transparent',
             fontFamily: 'Consolas, monospace'
         },
+        series: [], // Initialize empty series to prevent updateOptions crash
 
         // Explicit colors: CPU (Red), Network interfaces (Teal, Blue, Orange, Purple)
         colors: ['#FF4560', '#00E396', '#008FFB', '#FEB019', '#775DD0'],
@@ -461,7 +464,10 @@ export function updateCpuNetworkChart(chart, cpuData, networkData) {
     // Determine unit (B/s, KB/s, MB/s)
     determineNetworkUnit(maxRate);
 
-    // Update Y-axes with new unit label - PRESERVE formatters
+    // 1. Update series data FIRST to ensure chart has correct state
+    chart.updateSeries(series, true);
+
+    // 2. Update Y-axes with new unit label
     chart.updateOptions({
         yaxis: [
             {
@@ -488,9 +494,81 @@ export function updateCpuNetworkChart(chart, cpuData, networkData) {
             }
         ]
     }, false, false);
+}
 
-    // Update series data
-    chart.updateSeries(series, true);
+/**
+ * Append single data point to CPU + Network chart (Efficient Real-time Update)
+ * Uses chart.appendData() instead of full redraw
+ */
+export function appendCpuNetworkData(chart, cpuPoint, networkSnapshot) {
+    if (!chart) return;
+
+    const timestamp = new Date().getTime();
+    const newPoints = [];
+
+    // 1. CPU Point
+    const cpuVal = Number(cpuPoint?.percent || 0);
+    newPoints.push({
+        name: 'CPU',
+        data: [{ x: timestamp, y: cpuVal }]
+    });
+
+    // 2. Network Points (Stacked)
+    // We must manually stack them just like in updateCpuNetworkChart
+    // because logical stacking is disabled in config.
+    let cumulativeY = 0;
+    let maxRate = 0;
+
+    // We must iterate through EXISTING series in the chart to ensure order match
+    // or use 'name' to target. appendData takes array of objects { name: '...', data: [...] }
+
+    // Convert snapshot list to map for easy lookup
+    const netMap = {};
+    if (Array.isArray(networkSnapshot)) {
+        networkSnapshot.forEach(n => {
+            if (n.interface) {
+                netMap[n.interface] = (Number(n.send_bytes_s) || 0) + (Number(n.recv_bytes_s) || 0);
+            }
+        });
+    }
+
+    // Get current series names from chart context to ensure we provide data for all known interfaces
+    // Note: If a new interface appears, appendData might not handle adding a NEW series dynamically well without full update.
+    // So we only append to existing series.
+    const currentSeries = chart.w.config.series;
+
+    currentSeries.forEach(s => {
+        if (s.name === 'CPU') return; // Handled above
+
+        const val = netMap[s.name] || 0;
+        cumulativeY += val;
+
+        newPoints.push({
+            name: s.name,
+            data: [{ x: timestamp, y: cumulativeY }]
+        });
+
+        if (cumulativeY > maxRate) maxRate = cumulativeY;
+    });
+
+    // Dynamic Unit Scaling Check
+    // If unit changes (KB->MB), we technically need to update Y-axis labels.
+    const oldUnit = _networkUnit;
+    determineNetworkUnit(maxRate);
+    if (_networkUnit !== oldUnit) {
+        // If unit changed, full redraw is safer/required to update axis labels
+        // But for optimization, we might skip this often or force updateOptions
+        // updatesOptions + appendData might be heavy. 
+        // Let's just update axis if needed.
+        chart.updateOptions({
+            yaxis: [
+                { seriesName: 'CPU', opposite: true, min: 0, max: 100, labels: { formatter: (v) => `${Math.round(v)}%` } },
+                { seriesName: 'Network', labels: { formatter: (v) => formatNetworkRate(v) }, title: { text: `Throughput (${_networkUnit})` } }
+            ]
+        }, false, false);
+    }
+
+    chart.appendData(newPoints);
 }
 
 export function initializeSystemCharts(totalRAMBytes) {

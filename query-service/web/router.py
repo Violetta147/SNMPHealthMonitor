@@ -33,7 +33,7 @@ from db.models import User
 def dashboard_default():
     return render_template(
         "dashboard.html",
-        sysname="raspi-pbl",
+        sysname="osboxes",
         topic="systemstatus"
     )
 
@@ -121,7 +121,7 @@ def logs_view():
     users = User.query.with_entities(User.id, User.username).all()
     users_list = [{"id": u.id, "username": u.username} for u in users]
     
-    return render_template('audit.html', sysname="raspi-pbl", topic="audit", users=users_list)
+    return render_template('audit.html', sysname="osboxes", topic="audit", users=users_list)
 
 @limiter.limit("30 per minute")
 @web_bp.route('/files', methods=['GET', 'POST'])

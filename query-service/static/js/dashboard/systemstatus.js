@@ -3,12 +3,15 @@
  * Handles system status page (aggregated metrics)
  */
 import { BaseDashboardUI } from './base.js';
-import { initializeSystemCharts, createCpuNetworkChart, updateCpuNetworkChart } from '../system-chart.js';
+import { initializeSystemCharts, createCpuNetworkChart, updateCpuNetworkChart, appendCpuNetworkData } from '../system-chart.js';
 
 export class SystemStatusDashboard extends BaseDashboardUI {
     constructor(dataProcessor) {
         super(dataProcessor);
         this.cpuCoresInitialized = false;
+
+        // Track if chart has initial series rendered
+        this.chartSeriesInitialized = false;
 
         // Initialize charts ONCE on page load (total RAM line will be set later when available)
         if (!this.isInitialized) {
@@ -91,8 +94,6 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         this.registerElement('temperature-gauge', '#temperature-gauge');
         this.registerElement('temperature-value', '#temperature-value');
         this.registerElement('temperature-info', '#temperature-info');
-
-
     }
 
     /**
@@ -218,17 +219,6 @@ export class SystemStatusDashboard extends BaseDashboardUI {
                 swapSummaryEl.textContent = `Swap: ${swapPct}% (${this.formatBytesIEC(swapUsed, 0)} / ${this.formatMemoryTotal(swapTotal)})`;
             }
 
-            // // One-time debug: prove numeric types after casting
-            // if (!this._debugLogged) {
-            //     console.log(
-            //         'DEBUG DATA TYPE:',
-            //         typeof formatted.ramAppUsed,
-            //         formatted.ramAppUsed,
-            //         { total, free, buffers, cached, used_db, appUsedBytes }
-            //     );
-            //     this._debugLogged = true;
-            // }
-
             this.charts.dataManager.updateChart(this.charts.ramUsageChart, {
                 0: this.ramAppUsedData
             });
@@ -274,14 +264,100 @@ export class SystemStatusDashboard extends BaseDashboardUI {
             this.updateText('temperature-value', 'N/A');
         }
 
-        // Update CPU + Network combined chart
-        if (this.cpuNetworkChart && processedData.cpu && processedData.network) {
-            updateCpuNetworkChart(this.cpuNetworkChart, processedData.cpu, processedData.network);
-            this.updateCpuNetworkSummary(processedData.cpu, processedData.network);
+        // Update CPU + Network combined chart (Accumulate History)
+        if (this.cpuNetworkChart && processedData.cpu_percent && processedData.network) {
+            // 1. Update Buffer (Always keep valid history)
+            this.updateCpuNetworkHistory(processedData.cpu_percent, processedData.network);
+
+            // 2. Render Strategy: Append vs Full Redraw
+            const isLiveUpdate = Array.isArray(processedData.network);
+
+            if (isLiveUpdate && this.chartSeriesInitialized) {
+                // Efficient Append
+                // We need the calculated CPU avg point, which updateCpuNetworkHistory just added to buffer end
+                const lastCpu = this.cpuNetworkHistory.cpu[this.cpuNetworkHistory.cpu.length - 1];
+                appendCpuNetworkData(this.cpuNetworkChart, lastCpu, processedData.network);
+            } else {
+                // Full Redraw (First load or History Dump)
+                updateCpuNetworkChart(this.cpuNetworkChart, this.cpuNetworkHistory.cpu, this.cpuNetworkHistory.network);
+                // Mark initialized if we have valid data
+                if (this.cpuNetworkHistory.cpu.length > 0) this.chartSeriesInitialized = true;
+            }
+
+            this.updateCpuNetworkSummary(processedData.cpu_percent, processedData.network);
         }
     }
 
+    /**
+     * Accumulate Live Data into History Buffer for Chart
+     * Handles both Live Snapshot (Array) and History Dump (Object)
+     */
+    updateCpuNetworkHistory(cpuData, networkData) {
+        // Initialize if not exists
+        if (!this.cpuNetworkHistory) {
+            this.cpuNetworkHistory = { cpu: [], network: {} };
+        }
 
+        // --- HANDLE CPU ---
+        // Case A: Live Snapshot (Array of Cores) -> Calculate Avg and Append
+        // Case B: History (Array of Time Points) -> Replace/Merge
+        if (Array.isArray(cpuData) && cpuData.length > 0) {
+            // Heuristic: Check first element keys to distinguish Live Core vs History Point
+            const first = cpuData[0];
+            if (first.cpu !== undefined) {
+                // Live Snapshot: [{cpu:'cpu0', percent:..., time:...}]
+                let ts = first.time || new Date().toISOString();
+                const sum = cpuData.reduce((acc, c) => acc + (Number(c.percent) || 0), 0);
+                const avgPercent = sum / cpuData.length;
+                this.cpuNetworkHistory.cpu.push({ time: ts, percent: avgPercent });
+            } else if (first.percent !== undefined) {
+                // History: [{time:..., percent:...}]
+                // Replace buffer with history
+                this.cpuNetworkHistory.cpu = cpuData.slice(); // Copy
+            }
+        }
+
+        // Trim CPU Buffer
+        if (this.cpuNetworkHistory.cpu.length > 300) {
+            this.cpuNetworkHistory.cpu = this.cpuNetworkHistory.cpu.slice(-100);
+        }
+
+
+        // --- HANDLE NETWORK ---
+        // Case A: Live Snapshot (Array of Objects) -> Append
+        // Case B: History (Object of Arrays) -> Replace
+        if (Array.isArray(networkData)) {
+            // LIVE SNAPSHOT
+            const ts = new Date().toISOString();
+            networkData.forEach(net => {
+                const iface = net.interface;
+                if (!iface) return;
+
+                if (!this.cpuNetworkHistory.network[iface]) {
+                    this.cpuNetworkHistory.network[iface] = [];
+                }
+
+                this.cpuNetworkHistory.network[iface].push({
+                    time: net.time || ts,
+                    send_rate: Number(net.send_bytes_s) || 0,
+                    recv_rate: Number(net.recv_bytes_s) || 0
+                });
+
+                // Trim per interface
+                if (this.cpuNetworkHistory.network[iface].length > 100) {
+                    this.cpuNetworkHistory.network[iface].shift();
+                }
+            });
+        } else if (networkData && typeof networkData === 'object') {
+            // HISTORY DUMP: {'eth0': [{time..., send_rate...}], ...}
+            this.cpuNetworkHistory.network = {}; // Reset or Merge? Reset is safer for range query result
+            for (const [iface, points] of Object.entries(networkData)) {
+                if (Array.isArray(points)) {
+                    this.cpuNetworkHistory.network[iface] = points.slice();
+                }
+            }
+        }
+    }
 
     /**
      * Update CPU/Network summary text values
@@ -297,8 +373,17 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         }
 
         // Sum all network interfaces
+        // Sum all network interfaces
         let totalSend = 0, totalRecv = 0;
-        if (networkData && typeof networkData === 'object') {
+
+        if (Array.isArray(networkData)) {
+            // Live Update: Array of objects [{interface:..., send_bytes_s:..., recv_bytes_s:...}]
+            networkData.forEach(net => {
+                totalSend += Number(net.send_bytes_s || 0);
+                totalRecv += Number(net.recv_bytes_s || 0);
+            });
+        } else if (networkData && typeof networkData === 'object') {
+            // History: Object of arrays {'eth0': [{send_rate:..., recv_rate:...}]}
             for (const [iface, data] of Object.entries(networkData)) {
                 if (Array.isArray(data) && data.length > 0) {
                     const last = data[data.length - 1];
@@ -461,4 +546,3 @@ export class SystemStatusDashboard extends BaseDashboardUI {
         return card;
     }
 }
-
