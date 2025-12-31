@@ -13,3 +13,4 @@ notebooks/*
 database/*.txt
 query-service/logs/*.log
 rasberrypi/logs/*.log
+.windsurf
