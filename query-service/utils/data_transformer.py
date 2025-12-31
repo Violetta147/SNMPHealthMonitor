@@ -6,17 +6,22 @@ class RealTimeTransformer:
     Now stateful to calculate rates (e.g. network throughput).
     """
     
+    
+    # Predefined list of excluded prefixes (Loopback, Docker, Virtual, VPN)
+    EXCLUDED_PREFIXES = ['lo', 'lo0', 'docker', 'veth', 'br-', 'virbr', 'wg', 'zt']
+
     def __init__(self):
         # Store previous values for rate calculation
         # {sysname: {'net_rx': val, 'net_tx': val, 'time': ts}}
         self._prev_state: Dict[str, Dict] = {}
 
-    def transform(self, topic: str, metrics: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def transform(self, topic: str, metrics: List[Dict[str, Any]], sysname: str = None) -> Dict[str, Any]:
         """
         Main entry point (instance method).
         Args:
             topic: systemstatus, network, disk, diskio
             metrics: List of metric objects {name, value, labels, ts}
+            sysname: Optional system name from caller (UDP message)
         """
         if not metrics:
             return {}
@@ -25,6 +30,11 @@ class RealTimeTransformer:
         transformer = getattr(self, method_name, None)
         
         if transformer:
+            # Check if method accepts sysname
+            import inspect
+            sig = inspect.signature(transformer)
+            if 'sysname' in sig.parameters:
+                return transformer(metrics, sysname=sysname)
             return transformer(metrics)
         return {}
 
@@ -194,18 +204,13 @@ class RealTimeTransformer:
             if 'time' in prev_all:
                  dt = ts_val - prev_all['time']
 
-            # Predefined list of excluded prefixes (Loopback, Docker, Virtual, VPN)
-            EXCLUDED_PREFIXES = ['lo', 'docker', 'veth', 'br-', 'virbr', 'wg', 'zt']
-
             for if_idx, counters in list(net_counters.items()):
                 if_name = counters['name']
                 
-                # Check consistency with Physical/Wireless pattern (e* or w*)
-                # And explicitly exclude known virtual/internal prefixes
-                is_physical = if_name.startswith('e') or if_name.startswith('w')
-                is_excluded = any(if_name.startswith(p) for p in EXCLUDED_PREFIXES)
+                # Filter logic: Match queries.py strictness
+                is_excluded = any(if_name.startswith(p) for p in self.EXCLUDED_PREFIXES)
                 
-                if not is_physical or is_excluded:
+                if is_excluded:
                     continue
 
                 curr_rx = counters['rx']
@@ -276,19 +281,26 @@ class RealTimeTransformer:
             }
         }
 
-    @staticmethod
-    def _transform_network(metrics: List[Dict]) -> Dict:
+    def _transform_network(self, metrics: List[Dict], sysname: str = None) -> Dict:
         # Group by ifIndex (from labels)
         iface_map = {} # ifIndex -> {interface, bytes_sent, bytes_recv, ...}
+        ts_val = 0
         ts = datetime.now().isoformat()
+        if sysname is None:
+            sysname = "N/A"
         
-        # First, build index -> name mapping
+        # First, build index -> name mapping and find sysname
         iface_names = {}
         for m in metrics:
+            if m['name'] == 'sys.name': sysname = m['value']
+            if m.get('ts'): ts_val = m['ts']
+            
             if m['name'] == 'network.interface.name':
                 if_index = m.get('labels', {}).get('ifIndex')
                 if if_index:
                     iface_names[if_index] = m['value']
+        
+        if ts_val == 0: ts_val = datetime.now().timestamp()
         
         for m in metrics:
             name = m['name']
@@ -307,7 +319,9 @@ class RealTimeTransformer:
                     'interface': iface_name,
                     'time': ts,
                     'if_admin_status': 1,
-                    'if_oper_status': 1
+                    'if_oper_status': 1,
+                    'bytes_recv': 0,
+                    'bytes_sent': 0
                 }
             
             # Map metrics
@@ -322,83 +336,257 @@ class RealTimeTransformer:
             elif name == 'network.interface.high_speed_mbps':
                 iface_map[if_index]['if_high_speed_mbps'] = m['value']
         
+        # Calculate Rates
+        if sysname != "N/A":
+            prev_all = self._prev_state.get(sysname + '_network_page', {})
+            current_state = {'time': ts_val, 'interfaces': {}}
+            prev_interfaces = prev_all.get('interfaces', {})
+            dt = 0
+            if 'time' in prev_all: dt = ts_val - prev_all['time']
+            
+            # Only update state for Network Page if we have relevant data
+            # But wait, shared state with systemstatus? 
+            # Ideally yes, but systemstatus uses logical names often? 
+            # Here we use ifIndex. Let's use ifIndex for state key to be robust.
+            # Or use interface name if available.
+            
+            filtered_network = []
+            for if_index, if_data in iface_map.items():
+                if_name = if_data['interface']
+                 
+                # Filter logic: Match queries.py strictness
+                is_excluded = any(if_name.startswith(p) for p in self.EXCLUDED_PREFIXES)
+                
+                if is_excluded:
+                    continue
+
+                curr_rx = if_data['bytes_recv']
+                curr_tx = if_data['bytes_sent']
+                
+                # Store for next time
+                current_state['interfaces'][if_index] = {'rx': curr_rx, 'tx': curr_tx}
+                
+                # Rate
+                rx_rate = 0
+                tx_rate = 0
+                if dt > 0 and if_index in prev_interfaces:
+                    prev_if = prev_interfaces[if_index]
+                    rx_diff = curr_rx - prev_if['rx']
+                    tx_diff = curr_tx - prev_if['tx']
+                    
+                    if rx_diff >= 0: rx_rate = rx_diff / dt
+                    if tx_diff >= 0: tx_rate = tx_diff / dt
+                
+                if_data['recv_bytes_s'] = rx_rate
+                if_data['send_bytes_s'] = tx_rate
+                
+                filtered_network.append(if_data)
+
+            # Update state (Merge with existing? Be careful not to overwrite systemstatus state if they share 'sysname' key)
+            # Strategy: Use a distinct key prefix for Network Page state?
+            # Or share? "interfaces" in systemstatus state was keyed by if_index too?
+            # In systemstatus transformer (lines 127), it keyed net_counters by if_index.
+            # And saved state keyed by 'interfaces' (line 179).
+            # So they ARE compatible if I use the same structure.
+            # 'interfaces' -> ifIndex -> {rx, tx}
+            
+            # However, I should probably separate them to avoid race conditions or just use a different key in _prev_state map.
+            # e.g. self._prev_state[sysname + '_network_page']
+            
+            self._prev_state[sysname + '_network_page'] = current_state
+
         return {
-            'net_io': list(iface_map.values()),
+            'network': filtered_network,
             'device_info': { 'online': True, 'last_seen': ts }
         }
 
     @staticmethod
     def _transform_disk(metrics: List[Dict]) -> Dict:
-        # Group by mount/device
-        disk_map = {} # mount -> {total, used, free...}
+        # Group by dskIndex first to find names
+        # Map: dskIndex -> {mount, device}
+        dsk_meta = {}
         ts = datetime.now().isoformat()
-
+        
+        # Pass 1: Gather Names
         for m in metrics:
-            if 'disk.usage' in m['name']:
-                if m.get('ts'): ts = datetime.fromtimestamp(m['ts']).isoformat()
-                mount = m.get('labels', {}).get('mount')
-                device = m.get('labels', {}).get('device')
-                key = f"{mount}_{device}"
-                
-                if key not in disk_map:
-                    disk_map[key] = {'mount': mount, 'device_partition': device, 'time': ts}
-                
-                # values usually in KB or Bytes. Frontend expects? 
-                # DB stores bytes usually. If metrics are KB, might need mult.
-                # Assuming raw values from node_exporter/psutil might be bytes. 
-                # Manager logic valid_metrics needs checking. 
-                # User sample: disk.usage.total_kb -> KB.
-                
-                val = m['value']
-                if m['name'].endswith('total_kb'):
-                    disk_map[key]['total'] = val * 1024
-                elif m['name'].endswith('used_kb'):
-                    disk_map[key]['used'] = val * 1024
-                elif m['name'].endswith('free_kb'):
-                    disk_map[key]['free'] = val * 1024
-                elif m['name'].endswith('percent'):
-                    disk_map[key]['percent'] = val
+            if m['name'] == 'disk.usage.mount':
+                idx = m.get('labels', {}).get('dskIndex')
+                if idx:
+                    if idx not in dsk_meta: dsk_meta[idx] = {}
+                    dsk_meta[idx]['mount'] = m['value']
+            elif m['name'] == 'disk.usage.device':
+                idx = m.get('labels', {}).get('dskIndex')
+                if idx:
+                    if idx not in dsk_meta: dsk_meta[idx] = {}
+                    dsk_meta[idx]['device'] = m['value']
+            if m.get('ts') and 'disk.usage' in m['name']:
+                 ts = datetime.fromtimestamp(m['ts']).isoformat()
 
-        # Calculate missing fields if possible
-        for k, d in disk_map.items():
+        # Pass 2: Gather Values
+        disk_map = {} # dskIndex -> {total, used...}
+        
+        for m in metrics:
+            if 'disk.usage' not in m['name']: continue
+            
+            idx = m.get('labels', {}).get('dskIndex')
+            if not idx: continue
+            
+            if idx not in disk_map:
+                meta = dsk_meta.get(idx, {})
+                mount = meta.get('mount', 'Unknown')
+                device = meta.get('device', 'Unknown')
+                disk_map[idx] = {
+                    'mount': mount, 
+                    'device_partition': device, 
+                    'total': 0, 'used': 0, 'free': 0, 'percent': 0,
+                    'time': ts
+                }
+            
+            val = m['value']
+            # OIDs scale is 1024 according to snmp_oids_linux.json for kb fields
+            # The collector applies scale! So val is already bytes if scale=1024 was defined in JSON?
+            # Let's check snmp_oids_linux.json again.
+            # { "name": "disk.usage.total_kb", ... "scale": 1024, "unit": "bytes" }
+            # Yes, collector applies scale. So val is BYTES.
+            
+            if m['name'].endswith('total_kb'):
+                disk_map[idx]['total'] = val
+            elif m['name'].endswith('used_kb'):
+                disk_map[idx]['used'] = val
+            elif m['name'].endswith('free_kb'):
+                disk_map[idx]['free'] = val
+            elif m['name'].endswith('percent'):
+                disk_map[idx]['percent'] = val
+
+        # Calculate missing fields
+        filtered_disk_usage = []
+        valid_mounts = ['/', '/boot/firmware']
+        
+        for d in disk_map.values():
             if 'total' in d and 'used' in d and 'free' not in d:
                 d['free'] = d['total'] - d['used']
             if 'total' in d and 'used' in d and 'percent' not in d and d['total'] > 0:
                 d['percent'] = (d['used'] / d['total']) * 100
+            
+            # Filter logic matching queries.py
+            # 1. Mount must be in valid_mounts
+            # 2. Device must not be tmpfs
+            if d['mount'] in valid_mounts and 'tmpfs' not in d['device_partition']:
+                filtered_disk_usage.append(d)
 
         return {
-            'disk_usage': list(disk_map.values()),
+            'disk_usage': filtered_disk_usage,
             'device_info': { 'online': True, 'last_seen': ts }
         }
 
-    @staticmethod
-    def _transform_diskio(metrics: List[Dict]) -> Dict:
-        # Group by device
-        io_map = {}
+    def _transform_diskio(self, metrics: List[Dict], sysname: str = None) -> Dict:
+        # Group by index
+        io_meta = {} # index -> device_name
+        
+        ts_val = 0
         ts = datetime.now().isoformat()
+        if sysname is None:
+            sysname = "N/A"
+        
+        # Pass 1: Gather Names
+        for m in metrics:
+            if m['name'] == 'sys.name': sysname = m['value']
+            if m.get('ts'): ts_val = m['ts']
+            
+            if m['name'] == 'disk.io.device':
+                idx = m.get('labels', {}).get('index')
+                if idx:
+                    io_meta[idx] = m['value']
+
+        if ts_val == 0: ts_val = datetime.now().timestamp()
+        
+        # Pass 2: Gather Values
+        io_map = {} # index -> data
         
         for m in metrics:
-             if 'disk.io' in m['name']:
-                if m.get('ts'): ts = datetime.fromtimestamp(m['ts']).isoformat()
-                device = m.get('labels', {}).get('device') or m.get('labels', {}).get('name')
-                if not device: continue
-                
-                if device not in io_map:
-                    io_map[device] = {'disk': device, 'time': ts}
-                
-                if 'read_bytes' in m['name']:
-                    io_map[device]['read_bytes'] = m['value']
-                elif 'write_bytes' in m['name']:
-                    io_map[device]['write_bytes'] = m['value']
-                    
-        data = list(io_map.values())
+            if 'disk.io' not in m['name']: continue
+            if m.get('ts'): ts = datetime.fromtimestamp(m['ts']).isoformat()
+            
+            idx = m.get('labels', {}).get('index')
+            if not idx: continue
+            
+            if idx not in io_map:
+                device = io_meta.get(idx, f"disk{idx}")
+                io_map[idx] = {
+                    'disk': device, 
+                    'time': ts, 
+                    'read_bytes': 0, 'write_bytes': 0
+                }
+            
+            if 'read_bytes' in m['name']:
+                io_map[idx]['read_bytes'] = m['value']
+            elif 'write_bytes' in m['name']:
+                io_map[idx]['write_bytes'] = m['value']
+        
+        # Calculate Rates
+        filtered_data = []
+        import re # Import locally to avoid top-level change if not needed, or better assume it's available? 
+                  # It's better to modify top level imports but I can use import inside.
+        
+        if sysname != "N/A":
+             prev_all = self._prev_state.get(sysname + '_diskio', {})
+             current_state = {'time': ts_val, 'devices': {}}
+             prev_devices = prev_all.get('devices', {})
+             dt = 0
+             if 'time' in prev_all: dt = ts_val - prev_all['time']
+             
+             # Use device name as key for state to persist across index changes (unlikely but safe)?
+             # Or use index? Index might change if disks reordered. Device name is safer.
+             
+             for idx, d_data in io_map.items():
+                  device = d_data['disk']
+                  curr_read = d_data['read_bytes']
+                  curr_write = d_data['write_bytes']
+                  
+                  current_state['devices'][device] = {'read': curr_read, 'write': curr_write}
+                  
+                  r_rate = 0
+                  w_rate = 0
+                  
+                  if dt > 0 and device in prev_devices:
+                       prev_d = prev_devices[device]
+                       r_diff = curr_read - prev_d['read']
+                       w_diff = curr_write - prev_d['write']
+                       
+                       if r_diff >= 0: r_rate = r_diff / dt
+                       if w_diff >= 0: w_rate = w_diff / dt
+                  
+                  d_data['read_bytes_s'] = r_rate
+                  d_data['write_bytes_s'] = w_rate
+
+                  # Filter Logic matching queries.py
+                  # SQL: (disk NOT REGEXP '[0-9]+$' OR disk LIKE 'mmcblk%') AND disk NOT LIKE '%p[0-9]%'
+                  
+                  # Python Regex
+                  cond1 = (not re.search(r'[0-9]+$', device)) or device.startswith('mmcblk')
+                  cond2 = not re.search(r'p[0-9]', device)
+                  
+                  if cond1 and cond2:
+                      filtered_data.append(d_data)
+             
+             self._prev_state[sysname + '_diskio'] = current_state
+        else:
+             # Even if no sysname, apply filter to static data? 
+             # Ideally yes, but without sysname rate calc is skipped so it's edge case.
+             # Just filter io_map values.
+             for d_data in io_map.values():
+                  device = d_data['disk']
+                  cond1 = (not re.search(r'[0-9]+$', device)) or device.startswith('mmcblk')
+                  cond2 = not re.search(r'p[0-9]', device)
+                  if cond1 and cond2:
+                      filtered_data.append(d_data)        
         return {
             'disk_io': {
-                'data': data,
+                'data': filtered_data,
                 'pagination': {
                     'page': 1,
-                    'per_page': len(data),
-                    'total': len(data),
+                    'per_page': len(filtered_data),
+                    'total': len(filtered_data),
                     'total_pages': 1
                 }
             },

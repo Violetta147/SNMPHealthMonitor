@@ -58,7 +58,7 @@ export class DataProcessor {
             // Include device_info
             return {
                 device_info: data.device_info || {},
-                net_io: data.net_io || []
+                network: data.network || []
             };
         });
 

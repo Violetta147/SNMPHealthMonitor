@@ -43,7 +43,10 @@ def calculate_group_interval_dynamic(duration: timedelta, target_points: int = 5
     total_seconds = max(1, int(duration.total_seconds()))
     if total_seconds <= target_points:
         return 0
-    return max(1, int(round(total_seconds / float(target_points))))
+    interval = max(1, int(round(total_seconds / float(target_points))))
+    if interval < 60:
+        return 0
+    return interval
 
 
 def resolve_time_range(start_time, end_time, target_points=500):
@@ -437,15 +440,16 @@ def get_network_metrics(sysname, start_time=None, end_time=None):
 
             # RANGE MODE
             end_time, interval = resolve_time_range(start_time, end_time)
-
             if interval == 0:
                 cur.execute(f"""
                     WITH r AS (
                       SELECT
                         iface,
                         time,
-                        bytes_sent curr_val,
+                        bytes_sent AS curr_val,
+                        bytes_recv AS curr_recv,
                         LAG(bytes_sent) OVER (PARTITION BY iface ORDER BY time) prev_val,
+                        LAG(bytes_recv) OVER (PARTITION BY iface ORDER BY time) prev_recv,
                         TIMESTAMPDIFF(
                           MICROSECOND,
                           LAG(time) OVER (PARTITION BY iface ORDER BY time),
@@ -455,7 +459,16 @@ def get_network_metrics(sysname, start_time=None, end_time=None):
                       WHERE sysname=%s AND time BETWEEN %s AND %s
                         AND {NON_LOOPBACK_IFACE_SQL}
                     )
-                    SELECT iface, time, {RATE_SQL} AS send_bytes_s
+                    SELECT 
+                        iface, 
+                        time, 
+                        {RATE_SQL} AS send_bytes_s,
+                        CASE
+                          WHEN prev_recv IS NULL THEN NULL
+                          WHEN curr_recv < prev_recv THEN NULL
+                          WHEN dt_us <= 0 THEN NULL
+                          ELSE (curr_recv - prev_recv) / (dt_us / 1e6)
+                        END AS recv_bytes_s
                     FROM r
                     ORDER BY time, iface
                 """, (sysname, start_time, end_time))

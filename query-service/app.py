@@ -42,7 +42,7 @@ def on_new_data(message: dict):
             if metrics and topic in ['systemstatus', 'network', 'disk', 'diskio']:
                 try:
                     # print(f"[QueryService] Transforming metrics for {topic}")
-                    transformed_data = transformer_instance.transform(topic, metrics)
+                    transformed_data = transformer_instance.transform(topic, metrics, sysname=sysname)
                     if transformed_data:
                         # Attach IP from UDP message directly to payload
                         if ip_address and 'device_info' in transformed_data:
@@ -131,15 +131,21 @@ import os
 #     should_start = False
 #     print("[Main] Reloader parent: Skipping UDP listener start to avoid port conflict")
 
-notify_listener = None
-# if should_start:
-print("[Main] Starting UDP Listener")
-notify_listener = UDPNotificationListener(callback=on_new_data)
-notify_listener.start()
+# should_start = True
+# if debug_mode and not is_reloader_child:
+#     should_start = False
+#     print("[Main] Reloader parent: Skipping UDP listener start to avoid port conflict")
 
-try:
-    socketio.run(app, host=API_HOST, port=API_PORT, debug=False)
-finally:
-    if notify_listener:
-        notify_listener.stop()
-    print("[Main] Flask app shutdown")
+if __name__ == "__main__":
+    notify_listener = None
+    # if should_start:
+    print("[Main] Starting UDP Listener")
+    notify_listener = UDPNotificationListener(callback=on_new_data)
+    notify_listener.start()
+
+    try:
+        socketio.run(app, host=API_HOST, port=API_PORT, debug=False, allow_unsafe_werkzeug=True)
+    finally:
+        if notify_listener:
+            notify_listener.stop()
+        print("[Main] Flask app shutdown")

@@ -363,6 +363,10 @@ def write_metrics_batch(conn, sysname: str, metrics: List[Dict[str, Any]]) -> No
                     if if_index not in net_io_group:
                         net_io_group[if_index] = {}
 
+                    # Robust timestamp capture: use ANY metric's timestamp
+                    if ts is not None:
+                        net_io_group[if_index]["ts"] = ts
+                        
                     if name == "network.interface.name":
                         net_io_group[if_index]["iface"] = value
                     elif name == "network.interface.high_speed_mbps":
@@ -375,7 +379,6 @@ def write_metrics_batch(conn, sysname: str, metrics: List[Dict[str, Any]]) -> No
                         net_io_group[if_index]["bytes_recv"] = value
                     elif name == "network.tx_bytes_total":
                         net_io_group[if_index]["bytes_sent"] = value
-                        net_io_group[if_index]["ts"] = ts
                 elif name.startswith("sys."):
                     sys_info_group[name] = (value, ts)
                 elif name == "temperature.cpu":

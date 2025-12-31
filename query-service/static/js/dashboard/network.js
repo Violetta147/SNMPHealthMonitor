@@ -8,7 +8,7 @@ export class NetworkDashboard extends BaseDashboardUI {
     constructor(dataProcessor) {
         super(dataProcessor);
         this.wsManager = null;
-        this.sysname =  null;
+        this.sysname = null;
         this.topic = null;
     }
 
@@ -60,27 +60,27 @@ export class NetworkDashboard extends BaseDashboardUI {
      */
     update(processedData) {
         console.log('[NetworkDashboard] Updating network UI', processedData);
-        
+
         // Update device info (online status, last_seen, ip_address)
         if (processedData.device_info) {
             this.updateDeviceStatus(processedData.device_info);
             this.updateLastUpdateTime(processedData.device_info);
             this.updateServerIP(processedData.device_info);
         }
-        
+
         const container = document.getElementById('network-interfaces-container');
         if (!container) {
             console.warn('[NetworkDashboard] Network interfaces container not found');
             return;
         }
 
-        if (processedData.net_io && processedData.net_io.length > 0) {
+        if (processedData.network && processedData.network.length > 0) {
             container.innerHTML = '';
-            
-            processedData.net_io.forEach((iface) => {
+
+            processedData.network.forEach((iface) => {
                 const adminStatus = this.getAdminStatusText(iface.if_admin_status);
                 const operStatus = this.getOperStatusText(iface.if_oper_status);
-                
+
                 const ifaceCard = document.createElement('div');
                 ifaceCard.className = 'network-interface-card';
                 ifaceCard.innerHTML = `
