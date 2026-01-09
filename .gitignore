@@ -8,7 +8,6 @@ env/
 .venv/
 .env/
 .cursorignore
-notebooks/*
 .cursor
 database/*.txt
 query-service/logs/*.log
