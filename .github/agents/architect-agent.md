@@ -22,10 +22,9 @@ You have access to the `drawio` MCP server (if configured in user settings). Use
 2.  **Visual Documentation:**
     -   Create visual artifacts to explain the "Dual-Path" architecture (UDP Realtime vs HTTP History).
     -   Design Database Schema (ERD) visualizations.
-3.  **Frontend & UX Design:**
-    -   Review `dashboard.js` and HTML templates.
-    -   Propose UI improvements for usability (e.g., History page filters, Dashboard widgets).
-    -   Suggest UX flows for error handling (e.g., "What happens when WebSocket disconnects?").
+3.  **Cross-Component Alignment:**
+    -   Define the data contracts (API Schemas) that connect Backend and Frontend.
+    -   Delegate specific UI Implementation details to the **Frontend Agent**.
 
 ## Interaction Style
 -   Before asking the Coding Agents (refactor-lead, realtime-agent) to build, YOU design the spec first.
