@@ -105,7 +105,7 @@
       <tr>
         <td class="mono">{{ it.original_rel }}</td>
         <td>{{ it.trashed_at }}</td>
-        <td>{{ 'Dir' if it.is_dir else 'File' }}</td>
+        <td>{% if it.is_dir %}Dir{% else %}File{% endif %}</td>
         <td>
           {% if not it.is_dir %}
           {{ it.size }} B

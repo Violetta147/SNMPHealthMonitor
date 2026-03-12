@@ -302,7 +302,7 @@
       {% if current_path %}
       <tr>
         <td colspan="5">
-          {% set parent_path = '/'.join(current_path.split('/')[:-1]) %}
+          {% with parent_path=current_path.split|slice:":-1"|join:"/" %}
           {% if parent_path %}
           <a href="{% url 'web:files' %}?req_path={{ parent_path }}" class="file-name">
             <span class="icon">⬆️</span>
@@ -314,6 +314,7 @@
             <span>.. (Parent Directory)</span>
           </a>
           {% endif %}
+          {% endwith %}
         </td>
       </tr>
       {% endif %}
@@ -339,9 +340,7 @@
         </td>
         <td class="file-size">
           {% if not item.is_dir %}
-          {% if item.size < 1024 %} {{ item.size }} B {% elif item.size < 1048576 %} {{ "%.1f" |format(item.size / 1024)
-            }} KB {% elif item.size < 1073741824 %} {{ "%.1f" |format(item.size / 1048576) }} MB {% else %} {{ "%.2f"
-            |format(item.size / 1073741824) }} GB {% endif %} {% else %} <span style="color: #666;">—</span>
+          {% if item.size < 1024 %} {{ item.size }} B {% elif item.size < 1048576 %} {{ item.size|add:"0"|divisibleby:"1024"|yesno:",," }}{% widthratio item.size 1024 1 %} KB {% elif item.size < 1073741824 %} {% widthratio item.size 1048576 1 %} MB {% else %} {% widthratio item.size 1073741824 1 %} GB {% endif %} {% else %} <span style="color: #666;">—</span>
             {% endif %}
         </td>
         <td class="file-date">{{ item.mtime }}</td>
@@ -370,9 +369,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script>
     (function () {
-      const abs = {{ abs_current| tojson
-    }};
-    const rel = {{ (rel_current if rel_current else '')| tojson }};
+      const abs = "{{ abs_current|escapejs }}";
+      const rel = "{{ rel_current|default:''|escapejs }}";
     const pathText = document.getElementById('pathText');
     const pathMode = document.getElementById('pathMode');
     const toggleBtn = document.getElementById('toggleMode');
@@ -518,9 +516,8 @@
       zipSelBtn.addEventListener('click', () => {
         const sel = getSelected();
         if (!sel.length) { alert('Chưa chọn mục nào để nén.'); return; }
-        const currentPath = {{ (rel_current if rel_current else '') | tojson
-    }};
-    if (!beginTask('zip', 'Đang nén các mục đã chọn...')) return;
+        const currentPath = "{{ rel_current|default:''|escapejs }}";
+        if (!beginTask('zip', 'Đang nén các mục đã chọn...')) return;
 
     fetch('{% url "api:file_zip" %}', {
       method: 'POST',
@@ -615,9 +612,8 @@
         }
 
         // Check if file exists
-        const currentPath = {{ (rel_current if rel_current else '') | tojson
-    }};
-    let autoRename = false;
+        const currentPath = "{{ rel_current|default:''|escapejs }}";
+        let autoRename = false;
 
     try {
       const checkResp = await fetch('{% url "api:file_check_exists" %}', {
@@ -690,23 +686,6 @@
           alert('Upload đã bị hủy và file dở dang (' + uploadedFilename + ') đã được xóa.');
         } catch (e) {
           console.error('Failed to cleanup partial file:', e);
-          alert('Upload đã bị hủy (nhưng không thể xóa file dở dang).');
-        }
-      } else {
-        alert('Upload Error: ' + err);
-      }
-      uploadProgress.style.display = 'none';
-      btn.disabled = false;
-      btn.textContent = '📤 Upload to current folder';
-      cancelBtn.style.display = 'none'; // Hide cancel button
-      isUploading = false;
-      setBusy(false, '');
-    });
-          });
-        }
-
-    // Folder Upload Logic
-    const folderInput = document.getElementById('folderInput');
     const uploadFolderBtn = document.getElementById('uploadFolderBtn');
 
     if (uploadFolderBtn && folderInput) {
@@ -788,9 +767,8 @@
           uploadProgress.style.display = 'block';
 
           // Check exists logic
-          const currentPath = {{ (rel_current if rel_current else '') | tojson
-    }};
-    let autoRename = false;
+          const currentPath = "{{ rel_current|default:''|escapejs }}";
+          let autoRename = false;
 
     try {
       const checkResp = await fetch('{% url "api:file_check_exists" %}', {
@@ -862,8 +840,7 @@
     async function uploadFileChunked(file, autoRename, signal, onNameUpdate) {
       const CHUNK_SIZE = 1024 * 1024; // 1MB
       const totalChunks = Math.ceil(file.size / CHUNK_SIZE) || 1;
-      const currentPath = {{ (rel_current if rel_current else '')| tojson
-    }};
+      const currentPath = "{{ rel_current|default:''|escapejs }}";
 
     let targetFilename = file.name;
 
@@ -882,7 +859,7 @@
         formData.append('auto_rename', 'true');
       }
 
-      const response = await fetch('{{ url_for("api.api_upload_chunk") }}', {
+      const response = await fetch('{% url "api:file_upload_chunk" %}', {
         method: 'POST',
         body: formData,
         signal: signal // Pass abort signal
@@ -910,10 +887,11 @@
       progressBar.style.width = percent + '%';
       progressText.textContent = `${percent}% - Chunk ${i + 1}/${totalChunks}`;
     }
-        }
+      }
+    }
 
     update();
-      }) ();
+  })();
   </script>
 </div>
 {% endblock %}
