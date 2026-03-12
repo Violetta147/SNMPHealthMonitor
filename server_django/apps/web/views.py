@@ -341,7 +341,9 @@ def system(request):
 
 
 def logs_view(request):
-    return render(request, "audit.html")
+    from apps.core.models import User
+    users = User.objects.all().order_by('username')
+    return render(request, "audit.html", {'users': users})
 
 
 def logout(request):
