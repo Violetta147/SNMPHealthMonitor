@@ -84,6 +84,10 @@
     --tooltip-border: var(--bg-separator);
     --tooltip-text: var(--text-main);
 
+    /* Skeleton Loading */
+    --skeleton-base: var(--bg-hover);
+    --skeleton-highlight: var(--bg-separator);
+
     /* Buttons */
     --btn-primary-bg: var(--primary);
     --btn-primary-text: var(--bg-body);
@@ -266,31 +270,110 @@ body {
 
 /* Main Content */
 .dashboard-content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    /* Container for the grid */
+    width: 100%;
 }
 
-/* Info Card */
-.info-card {
+/* =========================================
+   PHASE 2: GRID & CARD SYSTEM
+   ========================================= */
+
+/* Main Grid Layout (Bento Grid) */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+    align-items: start; /* Prevent cards from stretching unmatched heights */
+}
+
+/* Generic Card Component */
+.card {
     background: var(--bg-card);
-    padding: 20px 30px;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Fill grid cell */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Card Header Standardized */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary);
 }
 
 .card-title {
     font-size: 18px;
     font-weight: 600;
     color: var(--text-main);
+    margin: 0;
+}
+
+/* Grid Utilities */
+.span-12 { grid-column: span 12; }
+.span-8  { grid-column: span 8; }
+.span-6  { grid-column: span 6; }
+.span-4  { grid-column: span 4; }
+.span-3  { grid-column: span 3; }
+.span-2  { grid-column: span 2; }
+
+/* Responsive Grid Adjustments */
+@media (max-width: 1024px) {
+    .span-2, .span-3 { grid-column: span 4; } /* Groups of 3 */
+    .span-4 { grid-column: span 6; } /* Groups of 2 */
+    .span-6 { grid-column: span 12; } /* Full width for charts */
+    .span-8 { grid-column: span 12; } /* Full width */
+    
+    /* Specific overrides if needed */
+    .sys-info.span-3 { grid-column: span 12; } /* Info takes full row on tablet? Or maybe span 12 is better. */
+}
+
+@media (max-width: 600px) {
+    .span-2, .span-3, .span-4, .span-6, .span-8, .span-12 {
+        grid-column: span 12;
+    }
+    
+    .dashboard-grid {
+        gap: 15px; /* Reduce gap on mobile */
+    }
+}
+
+
+/* Legacy aliases (mapped to new card system) */
+.info-card, 
+.metrics-section, 
+.detail-card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    height: 100%;
+}
+
+.section-title, 
+.detail-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-main);
     margin-bottom: 20px;
+    padding-bottom: 12px;
     border-bottom: 2px solid var(--primary);
-    padding-bottom: 10px;
 }
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
 
@@ -1210,4 +1293,119 @@ body {
 
 .apexcharts-gridline {
     stroke: var(--chart-grid) !important;
+}
+
+/* =========================================
+   PHASE 3: POLISH & INTERACTIONS
+   ========================================= */
+
+/* 1. Micro-interactions */
+
+/* Nav Item Polish */
+.nav-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: center;
+}
+
+.nav-item:hover::after,
+.nav-item.active::after {
+    transform: scaleX(1);
+}
+
+.nav-item.active {
+    background: linear-gradient(to bottom, transparent, rgba(var(--primary-rgb), 0.1));
+    border-color: transparent;
+    color: var(--primary);
+}
+
+/* Card Hover Glow */
+.card {
+    border: 1px solid transparent; /* Prepare for border transition */
+}
+
+.card:hover {
+    border-color: rgba(var(--primary-rgb), 0.3);
+}
+
+/* Button & Link Interactions */
+a, button {
+    transition: all 0.2s ease;
+}
+
+a:active, button:active {
+    transform: scale(0.98);
+}
+
+/* 2. Skeleton Loading States */
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.05) 25%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: var(--radius-sm);
+    color: transparent !important;
+    display: inline-block;
+    min-height: 1em;
+    pointer-events: none;
+    user-select: none;
+}
+
+.skeleton-text {
+    width: 60%; /* specific width override */
+    height: 0.8em;
+    margin-bottom: 0.2em;
+}
+
+.skeleton-circle {
+    border-radius: 50%;
+}
+
+.skeleton-chart {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    border-radius: var(--radius-md);
+}
+
+/* Loading helper classes */
+.loading-hidden {
+    display: none !important;
+}
+
+.loading-container {
+    position: relative;
+}
+
+/* Legend Colors */
+.text-danger { color: var(--danger) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-success { color: var(--success) !important; }
+.text-primary { color: var(--primary) !important; }
+.text-secondary { color: var(--text-muted) !important; }
+
+.legend-dot {
+    font-size: 1.2em;
+    vertical-align: middle;
+    margin-right: 4px;
 }

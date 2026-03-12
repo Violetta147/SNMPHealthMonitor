@@ -5,121 +5,122 @@
 {% block header_title %}System Status Dashboard{% endblock %}
 
 {% block content %}
-<!-- System Info Card -->
-<section class="info-card">
-    <h2 class="card-title">System Information</h2>
-    <div class="info-grid">
-        <div class="info-item">
-            <label>System Name</label>
-            <span id="sysname">-</span>
-        </div>
-        <div class="info-item">
-            <label>Location</label>
-            <span id="sys-location">-</span>
-        </div>
-        <div class="info-item">
-            <label>Uptime</label>
-            <span id="sys-uptime">-</span>
-        </div>
-    </div>
-</section>
-
-<!-- CPU Cores Section -->
-<section class="metrics-section">
-    <h2 class="section-title">CPU Cores</h2>
-    <div id="cpu-cores-container" class="cpu-cores-grid">
-        <!-- CPU cores will be dynamically inserted here -->
-    </div>
-</section>
-
-<!-- Other Metrics Grid -->
-<section class="metrics-section">
-    <h2 class="section-title">System Metrics</h2>
-    <div class="gauges-grid">
-        <!-- Load Average 1m -->
-        <div class="gauge-card">
-            <svg id="load-1m-gauge" class="gauge" viewBox="0 0 120 120">
-                <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="#3a4d5f" stroke-width="8" />
-                <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="#00bcd4" stroke-width="8"
-                    stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
-                    stroke-linecap="round" />
-                <text x="60" y="55" text-anchor="middle" class="gauge-value" id="load-1m-value">0</text>
-                <text x="60" y="70" text-anchor="middle" class="gauge-sublabel">Load (1m)</text>
-            </svg>
-            <div class="gauge-info">Last 1 minute</div>
-        </div>
-
-        <!-- Load Average 5m -->
-        <div class="gauge-card">
-            <svg id="load-5m-gauge" class="gauge" viewBox="0 0 120 120">
-                <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="#3a4d5f" stroke-width="8" />
-                <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="#00bcd4" stroke-width="8"
-                    stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
-                    stroke-linecap="round" />
-                <text x="60" y="55" text-anchor="middle" class="gauge-value" id="load-5m-value">0</text>
-                <text x="60" y="70" text-anchor="middle" class="gauge-sublabel">Load (5m)</text>
-            </svg>
-            <div class="gauge-info">Last 5 minutes</div>
-        </div>
-
-        <!-- Load Average 15m -->
-        <div class="gauge-card">
-            <svg id="load-15m-gauge" class="gauge" viewBox="0 0 120 120">
-                <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="#3a4d5f" stroke-width="8" />
-                <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="#00bcd4" stroke-width="8"
-                    stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
-                    stroke-linecap="round" />
-                <text x="60" y="55" text-anchor="middle" class="gauge-value" id="load-15m-value">0</text>
-                <text x="60" y="70" text-anchor="middle" class="gauge-sublabel">Load (15m)</text>
-            </svg>
-            <div class="gauge-info">Last 15 minutes</div>
-        </div>
-
-        <!-- CPU Temperature -->
-        <div class="gauge-card">
-            <svg id="temperature-gauge" class="gauge" viewBox="0 0 120 120">
-                <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="#3a4d5f" stroke-width="8" />
-                <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="#ff6b6b" stroke-width="8"
-                    stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
-                    stroke-linecap="round" />
-                <text x="60" y="55" text-anchor="middle" class="gauge-value" id="temperature-value">-</text>
-                <text x="60" y="70" text-anchor="middle" class="gauge-sublabel">Temperature</text>
-            </svg>
-            <div class="gauge-info" id="temperature-info">CPU Temp</div>
+<div class="dashboard-grid">
+    <!-- Row 1: System Info & Gauges -->
+    
+    <!-- System Information Card (Span 3) -->
+    <div class="card sys-info span-3">
+        <h2 class="card-title">System Info</h2>
+        <div class="info-grid" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="info-item">
+                <label>Name</label>
+                <span id="sysname" style="font-size: 1.1rem;">
+                    <span class="skeleton skeleton-text" style="width: 120px; display: inline-block;"></span>
+                </span>
+            </div>
+            <div class="info-item">
+                <label>Location</label>
+                <span id="sys-location" style="font-size: 1.1rem;">
+                    <span class="skeleton skeleton-text" style="width: 100px; display: inline-block;"></span>
+                </span>
+            </div>
+            <div class="info-item">
+                <label>Uptime</label>
+                <span id="sys-uptime" style="font-size: 1.1rem; color: var(--primary);">
+                    <span class="skeleton skeleton-text" style="width: 80px; display: inline-block;"></span>
+                </span>
+            </div>
         </div>
     </div>
-</section>
 
-<!-- CPU + Network Combined Chart Section -->
-<section class="details-section">
-    <div class="detail-card">
-        <h3 class="detail-title">CPU & Network Activity</h3>
-        <div id="cpu-network-chart" style="width: 100%; height: 350px;"></div>
-        <div
-            style="display: flex; justify-content: space-around; margin-top: 10px; font-family: monospace; font-size: 0.9rem; color: #ccc;">
-            <div><span style="color: #ff0000">●</span> CPU Avg: <span id="cpu-avg-value">--%</span></div>
-            <div><span style="color: #ff6b35">●</span> Upload: <span id="net-upload-value">-- B/s</span></div>
-            <div><span style="color: #33ff00">●</span> Download: <span id="net-download-value">-- B/s</span></div>
+    <!-- Gauge: Load 1m (Span 2) -->
+    <div class="card span-2" style="align-items: center; justify-content: center; padding: 10px;">
+        <h3 class="card-title" style="font-size: 0.85rem; margin-bottom: 5px; border: none;">Load (1m)</h3>
+        <svg id="load-1m-gauge" class="gauge" viewBox="0 0 120 120" style="width: 80px; height: 80px;">
+            <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="var(--bg-hover)" stroke-width="8" />
+            <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="var(--primary)" stroke-width="8"
+                stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
+                stroke-linecap="round" />
+            <text x="60" y="65" text-anchor="middle" class="gauge-value" id="load-1m-value" style="font-size: 1.2rem;">
+                 <tspan class="skeleton" style="fill: var(--text-muted); font-size: 0.8em;">-</tspan>
+            </text>
+        </svg>
+    </div>
+
+    <!-- Gauge: Load 5m (Span 2) -->
+    <div class="card span-2" style="align-items: center; justify-content: center; padding: 10px;">
+        <h3 class="card-title" style="font-size: 0.85rem; margin-bottom: 5px; border: none;">Load (5m)</h3>
+        <svg id="load-5m-gauge" class="gauge" viewBox="0 0 120 120" style="width: 80px; height: 80px;">
+            <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="var(--bg-hover)" stroke-width="8" />
+            <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="var(--primary)" stroke-width="8"
+                stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
+                stroke-linecap="round" />
+            <text x="60" y="65" text-anchor="middle" class="gauge-value" id="load-5m-value" style="font-size: 1.2rem;">0</text>
+        </svg>
+    </div>
+
+    <!-- Gauge: Load 15m (Span 2) -->
+    <div class="card span-2" style="align-items: center; justify-content: center; padding: 10px;">
+        <h3 class="card-title" style="font-size: 0.85rem; margin-bottom: 5px; border: none;">Load (15m)</h3>
+        <svg id="load-15m-gauge" class="gauge" viewBox="0 0 120 120" style="width: 80px; height: 80px;">
+            <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="var(--bg-hover)" stroke-width="8" />
+            <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="var(--primary)" stroke-width="8"
+                stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
+                stroke-linecap="round" />
+            <text x="60" y="65" text-anchor="middle" class="gauge-value" id="load-15m-value" style="font-size: 1.2rem;">0</text>
+        </svg>
+    </div>
+
+    <!-- Gauge: Temperature (Span 3) -->
+    <div class="card span-3" style="align-items: center; justify-content: center; padding: 10px;">
+        <h3 class="card-title" style="font-size: 0.85rem; margin-bottom: 5px; border: none;">Temperature</h3>
+        <svg id="temperature-gauge" class="gauge" viewBox="0 0 120 120" style="width: 80px; height: 80px;">
+            <circle class="gauge-background" cx="60" cy="60" r="45" fill="none" stroke="var(--bg-hover)" stroke-width="8" />
+            <circle class="gauge-progress" cx="60" cy="60" r="45" fill="none" stroke="var(--danger)" stroke-width="8"
+                stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)"
+                stroke-linecap="round" />
+            <text x="60" y="65" text-anchor="middle" class="gauge-value" id="temperature-value" style="font-size: 1.2rem;">-</text>
+        </svg>
+        <span id="temperature-info" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">CPU Temp</span>
+    </div>
+
+    <!-- Row 2: Charts -->
+
+    <!-- CPU & Network Chart (Span 6) -->
+    <div class="card span-6">
+        <h3 class="card-title">CPU & Network Activity</h3>
+        <div id="cpu-network-chart" style="width: 100%; height: 320px;"></div>
+        <div style="display: flex; justify-content: space-around; margin-top: 10px; font-family: monospace; font-size: 0.8rem; color: var(--text-body);">
+            <div><span class="legend-dot text-danger">●</span> CPU: <span id="cpu-avg-value">--%</span></div>
+            <div><span class="legend-dot text-warning">●</span> Up: <span id="net-upload-value">-- B/s</span></div>
+            <div><span class="legend-dot text-success">●</span> Down: <span id="net-download-value">-- B/s</span></div>
         </div>
     </div>
-</section>
 
-<!-- Memory Charts Section -->
-<section class="details-section">
-    <!-- Memory Usage Single Area Chart -->
-    <div class="detail-card memory-chart-card">
-        <h3 class="detail-title">Biểu đồ Bộ nhớ (RAM)</h3>
-        <div id="memory-usage-chart" style="width: 100%; height: 400px;"></div>
-        <div
-            style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 4px;">
-            <div id="mem-summary-text"
-                style="color: #4dbd74; font-size: 1.2rem; font-weight: bold; font-family: monospace;">Memory: --% (-- /
-                --)</div>
-            <div id="swap-summary-text" style="color: #aaa; font-size: 1.2rem; font-family: monospace;">Swap: --% (-- /
-                --)</div>
+    <!-- Memory Chart (Span 6) -->
+    <div class="card span-6">
+        <h3 class="card-title">Memory Usage</h3>
+        <!-- Note: ID matches system-chart.js usage -->
+        <div id="memory-usage-chart" style="width: 100%; height: 320px;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+            <div id="mem-summary-text" style="color: var(--success); font-weight: bold; font-family: monospace;">
+                <span class="skeleton skeleton-text" style="width: 140px; display: inline-block;"></span>
+            </div>
+            <div id="swap-summary-text" style="color: var(--text-secondary); font-family: monospace;">
+                 <span class="skeleton skeleton-text" style="width: 100px; display: inline-block;"></span>
+            </div>
         </div>
     </div>
-</section>
+
+    <!-- Row 3: CPU Cores (Span 12) -->
+    <div class="card span-12">
+        <h3 class="card-title">CPU Cores</h3>
+        <div id="cpu-cores-container" class="cpu-cores-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; width: 100%;">
+            <!-- CPU cores dynamically inserted here -->
+        </div>
+    </div>
+
+</div>
 {% endblock %}
 
 {% block extra_scripts %}

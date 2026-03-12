@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'apps.metrics',
     'apps.realtime',
     'apps.web',
+    
+    # Third party apps
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

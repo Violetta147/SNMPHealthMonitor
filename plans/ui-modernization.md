@@ -16,19 +16,19 @@ Transform the current "Raw HTML/Custom CSS" interface into a modern, responsive,
 - [x] **Refactor Existing CSS:** Replace hardcoded values with new variables.
 
 ## Phase 2: Structural Upgrade (Layout)
-- [ ] **Grid System:** Refactor `dashboard.html` to use CSS Grid for the main layout instead of floats or simple flex.
-- [ ] **Card Component:** Create a standardized `.card` class with:
+- [x] **Grid System:** Refactor `dashboard.html` to use CSS Grid for the main layout instead of floats or simple flex.
+- [x] **Card Component:** Create a standardized `.card` class with:
     -   Background color (`--bg-card`).
     -   Border radius (`--radius-md`).
     -   Subtle box-shadow.
     -   Padding (`--spacing-md`).
-- [ ] **Responsive Design:** Ensure the grid collapses correctly on mobile (<768px).
+- [x] **Responsive Design:** Ensure the grid collapses correctly on mobile (<768px).
 
 ## Phase 3: Visual Polish & Interactions
-- [ ] **Micro-interactions:** Add hover effects to buttons and cards.
-- [ ] **Loading States:** Implement "Skeleton Screens" or spinners for charts before WebSocket data arrives.
-- [ ] **Navigation:** Style the sidebar/header to match the new theme.
-- [ ] **Dark Mode Prep:** Ensure all colors are mapped to variables so a `.dark-theme` class can override them easily.
+- [x] **Micro-interactions:** Add hover effects to buttons and cards.
+- [x] **Loading States:** Implement "Skeleton Screens" or spinners for charts before WebSocket data arrives.
+- [x] **Navigation:** Style the sidebar/header to match the new theme.
+- [x] **Dark Mode Prep:** Ensure all colors are mapped to variables so a `.dark-theme` class can override them easily.
 
 ## Dependencies
 - Does not affect backend logic (`apps/`).

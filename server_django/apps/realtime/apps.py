@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 import threading
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 
