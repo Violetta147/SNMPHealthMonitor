@@ -324,7 +324,7 @@
       {% if item.name != '.trash' and item.name != '.backups' %}
       <tr>
         <td class="sel-cell"><input type="checkbox" class="sel" data-path="{{ item.relative_path }}"
-            data-isdir="{{ 1 if item.is_dir else 0 }}" /></td>
+            data-isdir="{{ item.is_dir|yesno:'1,0' }}" /></td>
         <td>
           {% if item.is_dir %}
           <a href="{% url 'web:files' %}?req_path={{ item.relative_path }}" class="file-name">
@@ -353,7 +353,7 @@
           <button class="btn unzip-btn" data-path="{{ item.relative_path }}">Unzip</button>
           {% endif %}
           <button class="btn btn-danger delete" data-path="{{ item.relative_path }}"
-            data-isdir="{{ 1 if item.is_dir else 0 }}">Delete</button>
+            data-isdir="{{ item.is_dir|yesno:'1,0' }}">Delete</button>
         </td>
       </tr>
       {% endif %}
