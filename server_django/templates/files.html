@@ -453,7 +453,7 @@
         if (!confirm(`Xác nhận xóa ${isDir ? 'thư mục' : 'tệp'}: ${rel}?`)) return;
         const permanent = e.shiftKey ? true : (confirm('Xóa vĩnh viễn? OK = xóa vĩnh viễn, Cancel = chuyển vào thùng rác') ? true : false);
         if (!beginTask('delete', permanent ? 'Đang xóa vĩnh viễn...' : 'Đang chuyển vào thùng rác...')) return;
-        fetch('"{% url \'api:file_delete\' %}"', {
+        fetch('/api/delete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ path: rel, permanent })
@@ -489,7 +489,7 @@
       const msg = permanent ? `Xóa vĩnh viễn ${sel.length} mục?` : `Chuyển ${sel.length} mục vào thùng rác?`;
       if (!confirm(msg)) return;
       if (!beginTask('delete', permanent ? 'Đang xóa vĩnh viễn...' : 'Đang chuyển vào thùng rác...')) return;
-      fetch("{% url 'api:file_delete_batch' %}", {
+      fetch('/api/delete_batch', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ paths: sel.map(s => s.path), permanent: !!permanent })
       }).then(r => r.json()).then(resp => {
@@ -519,7 +519,7 @@
         const currentPath = "{{ rel_current|default:''|escapejs }}";
         if (!beginTask('zip', 'Đang nén các mục đã chọn...')) return;
 
-    fetch('{% url "api:file_zip" %}', {
+    fetch('/api/zip', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ paths: sel.map(s => s.path), current_path: currentPath })
@@ -546,7 +546,7 @@
         if (!confirm(`Giải nén file ${rel} tại đây?`)) return;
         if (!beginTask('unzip', 'Đang giải nén file...')) return;
 
-        fetch('{% url "api:file_unzip" %}', {
+        fetch('/api/unzip', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ path: rel })
@@ -616,7 +616,7 @@
         let autoRename = false;
 
     try {
-      const checkResp = await fetch('{% url "api:file_check_exists" %}', {
+      const checkResp = await fetch('/api/check_exists', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filename: file.name, path: currentPath })
@@ -678,7 +678,7 @@
         // Auto-delete partial file
         try {
           const deletePath = (currentPath ? currentPath + '/' : '') + uploadedFilename;
-          await fetch('{% url "api:file_delete" %}', {
+          await fetch('/api/delete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ path: deletePath, permanent: true })
@@ -771,7 +771,7 @@
           let autoRename = false;
 
     try {
-      const checkResp = await fetch('{% url "api:file_check_exists" %}', {
+      const checkResp = await fetch('/api/check_exists', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filename: zipFile.name, path: currentPath })
@@ -859,7 +859,7 @@
         formData.append('auto_rename', 'true');
       }
 
-      const response = await fetch('{% url "api:file_upload_chunk" %}', {
+      const response = await fetch('/api/upload_chunk', {
         method: 'POST',
         body: formData,
         signal: signal // Pass abort signal

@@ -173,7 +173,7 @@
       emptyBtn.addEventListener('click', function () {
         if (!confirm('Xóa toàn bộ thùng rác? Hành động này không thể hoàn tác.')) return;
         if (!beginTask('empty_trash', 'Đang xóa toàn bộ thùng rác...')) return;
-        fetch("{% url 'api:trash_empty' %}", { method: 'POST' })
+        fetch('/api/trash/empty', { method: 'POST' })
           .then(r => r.json()).then(resp => {
             if (resp && resp.ok) {
               endTask();
@@ -195,7 +195,7 @@
         const tr = this.getAttribute('data-tr');
         if (!confirm('Khôi phục mục đã chọn?')) return;
         if (!beginTask('restore', 'Đang khôi phục mục đã chọn...')) return;
-        fetch("{% url 'api:trash_restore' %}", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trash_rel: tr }) })
+        fetch('/api/trash/restore', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trash_rel: tr }) })
           .then(r => r.json()).then(resp => {
             if (resp && resp.ok) {
               endTask();
@@ -217,7 +217,7 @@
         const tr = this.getAttribute('data-tr');
         if (!confirm('Xóa vĩnh viễn? Hành động này không thể hoàn tác.')) return;
         if (!beginTask('delete_permanent', 'Đang xóa vĩnh viễn mục được chọn...')) return;
-        fetch("{% url 'api:trash_delete_permanent' %}", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trash_rel: tr }) })
+        fetch('/api/trash/delete_permanent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trash_rel: tr }) })
           .then(r => r.json()).then(resp => {
             if (resp && resp.ok) {
               endTask();
