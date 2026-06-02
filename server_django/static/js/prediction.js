@@ -304,13 +304,8 @@
             },
             colors: ['#6c63ff', '#f85149'],
             fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.3,
-                    opacityTo: 0.05,
-                    stops: [0, 100],
-                },
+                type: 'solid',
+                opacity: 1,
             },
             xaxis: {
                 type: 'datetime',
