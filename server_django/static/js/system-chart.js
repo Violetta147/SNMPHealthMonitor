@@ -17,7 +17,7 @@ export function createRAMUsageChart(container, totalRAMBytes) {
         chart: {
             type: 'area',
             height: 300,
-            animations: { enabled: true, easing: 'linear', speed: 300 },
+            animations: { enabled: false, easing: 'linear', speed: 300 },
             toolbar: { show: false },
             zoom: { enabled: false },
             background: 'transparent',
@@ -235,7 +235,7 @@ export class ChartDataManager {
             const ts = new Date(t).getTime();
             return { x: Number.isFinite(ts) ? ts : Date.now(), y: out[i] };
         });
-        chart.updateSeries([{ name: 'Used', data: points }], true);
+        chart.updateSeries([{ name: 'Used', data: points }], false);
         this.updateCount++;
     }
 
@@ -264,7 +264,7 @@ export function createCpuNetworkChart(container) {
             type: 'line',
             height: 350,
             stacked: false,  // Disabled - we manually stack network areas
-            animations: { enabled: true, easing: 'linear', speed: 1000, dynamicAnimation: { speed: 1000 } },
+            animations: { enabled: false, easing: 'linear', speed: 1000, dynamicAnimation: { speed: 1000 } },
             toolbar: { show: false },
             zoom: { enabled: false },
             background: 'transparent',
@@ -466,7 +466,7 @@ export function updateCpuNetworkChart(chart, cpuData, networkData) {
     determineNetworkUnit(maxRate);
 
     // 1. Update series data FIRST to ensure chart has correct state
-    chart.updateSeries(series, true);
+    chart.updateSeries(series, false);
 
     // 2. Update Y-axes with new unit label
     chart.updateOptions({
@@ -583,6 +583,6 @@ export function initializeSystemCharts(totalRAMBytes) {
 
     return {
         ramUsageChart,
-        dataManager: new ChartDataManager(3000, 2000)
+        dataManager: new ChartDataManager(300, 300)
     };
 }
