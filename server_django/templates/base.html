@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'css/ai-chatbot.css' %}">
+    <link rel="stylesheet" href="{% static 'css/prediction.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -99,6 +100,9 @@
     {% block extra_scripts %}
     <script type="module" src="{% static 'js/dashboard.js' %}"></script>
     {% endblock %}
+
+    <!-- Predictive AIOps (Machine Learning) -->
+    <script src="{% static 'js/prediction.js' %}"></script>
 
     <!-- AI DevOps Assistant Chatbot -->
     <script src="{% static 'js/ai-chatbot.js' %}"></script>
