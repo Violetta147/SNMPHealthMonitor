@@ -38,7 +38,7 @@ export class MemoryChart {
                 height: 400,
                 stacked: true, // QUAN TRỌNG: Kích hoạt chế độ xếp chồng
                 animations: {
-                    enabled: false,
+                    enabled: true,
                     easing: 'linear',
                     dynamicAnimation: { speed: 1000 } // Hiệu ứng trượt mượt mà
                 },

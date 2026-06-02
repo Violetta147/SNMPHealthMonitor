@@ -36,7 +36,7 @@ export class MemoryPercentChart {
                 type: 'line', // Biểu đồ đường
                 height: 350,
                 animations: {
-                    enabled: false,
+                    enabled: true,
                     easing: 'linear',
                     dynamicAnimation: { speed: 1000 }
                 },
