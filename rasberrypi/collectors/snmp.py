@@ -114,7 +114,10 @@ async def fetch_snmp_metrics_async(host: str, port: int, community: str, version
     context = ContextData()
     
     # tạo transport target
-    transport = await UdpTransportTarget.create((host, port), timeout=3.0, retries=0)
+    if hasattr(UdpTransportTarget, 'create'):
+        transport = await UdpTransportTarget.create((host, port), timeout=3.0, retries=0)
+    else:
+        transport = UdpTransportTarget((host, port), timeout=3.0, retries=0)
 
     metrics: List[Dict[str, Any]] = []
 
