@@ -14,7 +14,6 @@ if project_root not in sys.path:
 from units import UNITLESS, BYTES, COUNT, PERCENT, SECONDS, MBPS, CELSIUS
 
 try:
-    # Modern PySNMP 7.x+ v3arch asyncio HLAPI
     from pysnmp.hlapi.v3arch.asyncio import (
         CommunityData,
         SnmpEngine,
@@ -22,35 +21,11 @@ try:
         ContextData,
         ObjectType,
         ObjectIdentity,
+        get_cmd,
+        walk_cmd,
     )
-    from pysnmp.hlapi.v3arch.asyncio import get_cmd
-    # PySNMP 7.x uses next_cmd, not walk_cmd
-    from pysnmp.hlapi.v3arch.asyncio import next_cmd as walk_cmd
-except ImportError:
-    try:
-        # Fallback to PySNMP 6.x / 4.x asyncio HLAPI
-        from pysnmp.hlapi.asyncio import (
-            CommunityData,
-            SnmpEngine,
-            UdpTransportTarget,
-            ContextData,
-            ObjectType,
-            ObjectIdentity,
-            getCmd as get_cmd,
-            nextCmd as walk_cmd,
-        )
-    except ImportError:
-        # Fallback for alternative packaging structures
-        from pysnmp.hlapi import (
-            CommunityData,
-            SnmpEngine,
-            UdpTransportTarget,
-            ContextData,
-            ObjectType,
-            ObjectIdentity,
-        )
-        from pysnmp.hlapi.asyncio import getCmd as get_cmd
-        from pysnmp.hlapi.asyncio import nextCmd as walk_cmd
+except Exception as e:
+    raise
 
 
 
