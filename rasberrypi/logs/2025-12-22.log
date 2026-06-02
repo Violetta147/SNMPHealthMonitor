@@ -1,0 +1,111 @@
+2025-12-22 18:25:29,537 - __main__ - INFO - Checking database readiness...
+2025-12-22 18:25:39,560 - __main__ - ERROR - Failed to start: Database readiness check failed for host=localhost port=3306 db=metrics user=root: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 644, in connect
+    sock = socket.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\socket.py", line 863, in create_connection
+    raise exceptions[0]
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\socket.py", line 848, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 53, in get_connection
+    conn = MySQLdb.connect(**cfg)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 358, in __init__
+    self.connect()
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 711, in connect
+    raise exc
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 71, in ensure_db_ready
+    conn = get_connection()
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 65, in get_connection
+    raise RuntimeError(f"Failed to connect to MySQL: {e}") from e
+RuntimeError: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\manager\__main__.py", line 26, in <module>
+    check_prerequisites()
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\manager\__main__.py", line 20, in check_prerequisites
+    ensure_db_ready()
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 92, in ensure_db_ready
+    raise RuntimeError(
+RuntimeError: Database readiness check failed for host=localhost port=3306 db=metrics user=root: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+2025-12-22 18:26:52,435 - __main__ - INFO - Checking database readiness...
+2025-12-22 18:26:54,648 - __main__ - INFO - Database ready
+2025-12-22 20:05:02,022 - __main__ - INFO - Checking database readiness...
+2025-12-22 20:05:06,109 - __main__ - ERROR - Failed to start: Database readiness check failed for host=localhost port=3306 db=metrics user=root: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 644, in connect
+    sock = socket.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\socket.py", line 863, in create_connection
+    raise exceptions[0]
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\socket.py", line 848, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 53, in get_connection
+    conn = MySQLdb.connect(**cfg)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 358, in __init__
+    self.connect()
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 711, in connect
+    raise exc
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 71, in ensure_db_ready
+    conn = get_connection()
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 65, in get_connection
+    raise RuntimeError(f"Failed to connect to MySQL: {e}") from e
+RuntimeError: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\manager\__main__.py", line 26, in <module>
+    check_prerequisites()
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\manager\__main__.py", line 20, in check_prerequisites
+    ensure_db_ready()
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 92, in ensure_db_ready
+    raise RuntimeError(
+RuntimeError: Database readiness check failed for host=localhost port=3306 db=metrics user=root: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+2025-12-22 20:05:28,257 - __main__ - INFO - Checking database readiness...
+2025-12-22 20:05:30,323 - __main__ - INFO - Database ready
+2025-12-22 20:58:38,950 - __main__ - INFO - Checking database readiness...
+2025-12-22 20:58:41,012 - __main__ - INFO - Database ready
+2025-12-22 21:00:55,541 - __main__ - INFO - Checking database readiness...
+2025-12-22 21:00:57,593 - __main__ - INFO - Database ready
+2025-12-22 21:11:47,061 - __main__ - INFO - Checking database readiness...
+2025-12-22 21:11:49,170 - __main__ - INFO - Database ready
+2025-12-22 21:23:41,794 - __main__ - INFO - Checking database readiness...
+2025-12-22 21:23:43,858 - __main__ - INFO - Database ready
+2025-12-22 21:50:44,793 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.130
+2025-12-22 21:55:18,398 - __main__ - INFO - Checking database readiness...
+2025-12-22 21:55:20,465 - __main__ - INFO - Database ready
+2025-12-22 21:56:29,214 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.130
+2025-12-22 22:25:41,031 - __main__ - INFO - Checking database readiness...
+2025-12-22 22:25:43,123 - __main__ - INFO - Database ready
+2025-12-22 22:36:01,077 - __main__ - INFO - Manager stopped by user
+2025-12-22 22:36:05,701 - __main__ - INFO - Checking database readiness...
+2025-12-22 22:36:07,777 - __main__ - INFO - Database ready
+2025-12-22 22:48:17,572 - __main__ - INFO - Checking database readiness...
+2025-12-22 22:48:19,624 - __main__ - INFO - Database ready

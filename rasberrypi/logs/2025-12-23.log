@@ -1,0 +1,99 @@
+2025-12-23 04:23:19,048 - __main__ - INFO - Manager stopped by user
+2025-12-23 05:03:11,921 - __main__ - INFO - Checking database readiness...
+2025-12-23 05:03:14,060 - __main__ - INFO - Database ready
+2025-12-23 05:04:00,614 - __main__ - INFO - Checking database readiness...
+2025-12-23 05:04:02,690 - __main__ - INFO - Database ready
+2025-12-23 05:05:03,592 - __main__ - INFO - Checking database readiness...
+2025-12-23 05:05:05,642 - __main__ - INFO - Database ready
+2025-12-23 05:08:24,230 - __main__ - INFO - Checking database readiness...
+2025-12-23 05:08:26,406 - __main__ - INFO - Database ready
+2025-12-23 05:10:01,964 - __main__ - INFO - Checking database readiness...
+2025-12-23 05:10:04,011 - __main__ - INFO - Database ready
+2025-12-23 05:18:27,424 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.79.201.159
+2025-12-23 05:20:22,244 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.79.201.159
+2025-12-23 05:22:15,244 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.79.201.159
+2025-12-23 05:23:55,008 - __main__ - INFO - Manager stopped by user
+2025-12-23 05:24:09,922 - __main__ - INFO - Checking database readiness...
+2025-12-23 05:24:12,016 - __main__ - INFO - Database ready
+2025-12-23 05:26:00,582 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.79.201.159
+2025-12-23 08:32:53,661 - __main__ - INFO - Checking database readiness...
+2025-12-23 08:32:57,983 - __main__ - ERROR - Failed to start: Database readiness check failed for host=localhost port=3306 db=metrics user=root: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 644, in connect
+    sock = socket.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\socket.py", line 863, in create_connection
+    raise exceptions[0]
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\socket.py", line 848, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 53, in get_connection
+    conn = MySQLdb.connect(**cfg)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 358, in __init__
+    self.connect()
+  File "C:\Users\LAPTOP T&T\.conda\envs\manager\Lib\site-packages\pymysql\connections.py", line 711, in connect
+    raise exc
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 71, in ensure_db_ready
+    conn = get_connection()
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 65, in get_connection
+    raise RuntimeError(f"Failed to connect to MySQL: {e}") from e
+RuntimeError: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\manager\__main__.py", line 26, in <module>
+    check_prerequisites()
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\manager\__main__.py", line 20, in check_prerequisites
+    ensure_db_ready()
+  File "C:\Users\LAPTOP T&T\VIOLETTA\Documents\MQF\StudyMaterial\Third year\5th Semester\PBL4\projects\rasberrypi\db_service\db_config.py", line 92, in ensure_db_ready
+    raise RuntimeError(
+RuntimeError: Database readiness check failed for host=localhost port=3306 db=metrics user=root: Failed to connect to MySQL: (2003, "Can't connect to MySQL server on 'localhost' ([WinError 10061] No connection could be made because the target machine actively refused it)")
+2025-12-23 08:33:14,773 - __main__ - INFO - Checking database readiness...
+2025-12-23 08:33:16,861 - __main__ - INFO - Database ready
+2025-12-23 09:49:47,401 - __main__ - INFO - Checking database readiness...
+2025-12-23 09:49:49,463 - __main__ - INFO - Database ready
+2025-12-23 09:52:47,751 - __main__ - INFO - Checking database readiness...
+2025-12-23 09:52:49,839 - __main__ - INFO - Database ready
+2025-12-23 09:58:56,157 - __main__ - INFO - Manager stopped by user
+2025-12-23 09:59:05,341 - __main__ - INFO - Checking database readiness...
+2025-12-23 09:59:07,408 - __main__ - INFO - Database ready
+2025-12-23 10:39:40,148 - __main__ - INFO - Checking database readiness...
+2025-12-23 10:39:42,230 - __main__ - INFO - Database ready
+2025-12-23 10:40:49,243 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 10:46:13,249 - __main__ - INFO - Checking database readiness...
+2025-12-23 10:46:15,349 - __main__ - INFO - Database ready
+2025-12-23 10:48:26,315 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 10:49:17,412 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 11:35:39,593 - __main__ - INFO - Checking database readiness...
+2025-12-23 11:35:41,678 - __main__ - INFO - Database ready
+2025-12-23 11:39:27,654 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 11:40:57,783 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 11:45:19,975 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 11:50:50,866 - __main__ - INFO - Manager stopped by user
+2025-12-23 11:50:53,526 - __main__ - INFO - Manager stopped by user
+2025-12-23 11:51:06,550 - __main__ - INFO - Checking database readiness...
+2025-12-23 11:51:08,633 - __main__ - INFO - Database ready
+2025-12-23 11:56:55,287 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 11:59:08,798 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:00:28,564 - __main__ - INFO - Checking database readiness...
+2025-12-23 12:00:30,643 - __main__ - INFO - Database ready
+2025-12-23 12:03:42,763 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:04:47,762 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:05:20,724 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:08:48,123 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:12:43,402 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:13:33,157 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:15:58,785 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9
+2025-12-23 12:18:03,698 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.137.9

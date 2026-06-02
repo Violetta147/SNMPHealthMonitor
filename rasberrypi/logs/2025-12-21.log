@@ -1,0 +1,95 @@
+2025-12-21 07:11:14,368 - __main__ - INFO - Checking database readiness...
+2025-12-21 07:11:16,722 - __main__ - INFO - Database ready
+2025-12-21 08:07:18,490 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.130
+2025-12-21 08:08:12,315 - __main__ - INFO - Checking database readiness...
+2025-12-21 08:08:14,355 - __main__ - INFO - Database ready
+2025-12-21 08:18:12,872 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.130
+2025-12-21 08:28:20,521 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.130
+2025-12-21 09:13:38,487 - __main__ - INFO - Checking database readiness...
+2025-12-21 09:13:40,610 - __main__ - INFO - Database ready
+2025-12-21 09:44:00,413 - __main__ - INFO - Checking database readiness...
+2025-12-21 09:44:02,503 - __main__ - INFO - Database ready
+2025-12-21 09:45:04,750 - __main__ - INFO - Checking database readiness...
+2025-12-21 09:45:06,838 - __main__ - INFO - Database ready
+2025-12-21 09:45:19,492 - __main__ - INFO - Checking database readiness...
+2025-12-21 09:45:21,557 - __main__ - INFO - Database ready
+2025-12-21 10:07:04,545 - __main__ - INFO - Checking database readiness...
+2025-12-21 10:07:06,621 - __main__ - INFO - Database ready
+2025-12-21 11:24:23,916 - __main__ - INFO - Checking database readiness...
+2025-12-21 11:24:26,089 - __main__ - INFO - Database ready
+2025-12-21 13:06:29,118 - __main__ - INFO - Checking database readiness...
+2025-12-21 13:06:31,187 - __main__ - INFO - Database ready
+2025-12-21 13:41:56,078 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:43:47,919 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:45:40,624 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:47:30,614 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:49:21,121 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:51:12,063 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:53:04,548 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:54:58,626 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:56:48,593 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 13:58:38,416 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:00:31,621 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:02:22,511 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:04:17,052 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:06:07,374 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:08:00,919 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:09:51,254 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:11:46,614 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:13:37,703 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:15:29,624 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:17:23,305 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:19:13,579 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:21:02,679 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:22:51,841 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:24:40,811 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:26:29,293 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:28:20,022 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:30:10,063 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:32:09,366 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:34:01,317 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:35:52,684 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.184.253.159
+2025-12-21 14:39:21,514 - __main__ - INFO - Checking database readiness...
+2025-12-21 14:39:23,588 - __main__ - INFO - Database ready
+2025-12-21 14:45:56,117 - __main__ - INFO - Checking database readiness...
+2025-12-21 14:45:58,180 - __main__ - INFO - Database ready
+2025-12-21 15:07:00,898 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.95.131.159
+2025-12-21 15:42:22,640 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 10.95.131.159
+2025-12-21 16:06:03,528 - __main__ - INFO - Manager stopped by user
+2025-12-21 16:06:09,613 - __main__ - INFO - Checking database readiness...
+2025-12-21 16:06:11,681 - __main__ - INFO - Database ready
+2025-12-21 16:21:16,420 - __main__ - INFO - Checking database readiness...
+2025-12-21 16:21:18,876 - __main__ - INFO - Database ready
+2025-12-21 16:40:52,773 - __main__ - INFO - Checking database readiness...
+2025-12-21 16:40:55,013 - __main__ - INFO - Database ready
+2025-12-21 16:48:50,169 - __main__ - INFO - Manager stopped by user
+2025-12-21 16:48:54,280 - __main__ - INFO - Manager stopped by user
+2025-12-21 16:49:01,822 - __main__ - INFO - Checking database readiness...
+2025-12-21 16:49:03,906 - __main__ - INFO - Database ready
+2025-12-21 16:49:51,817 - __main__ - INFO - Checking database readiness...
+2025-12-21 16:49:53,923 - __main__ - INFO - Database ready
+2025-12-21 16:52:48,929 - __main__ - INFO - Checking database readiness...
+2025-12-21 16:52:51,012 - __main__ - INFO - Database ready
+2025-12-21 17:18:23,072 - __main__ - INFO - Manager stopped by user
+2025-12-21 17:18:28,303 - __main__ - INFO - Checking database readiness...
+2025-12-21 17:18:30,374 - __main__ - INFO - Database ready
+2025-12-21 17:19:07,287 - __main__ - INFO - Checking database readiness...
+2025-12-21 17:19:09,349 - __main__ - INFO - Database ready
+2025-12-21 17:35:08,394 - __main__ - INFO - Checking database readiness...
+2025-12-21 17:35:10,447 - __main__ - INFO - Database ready
+2025-12-21 17:36:32,608 - __main__ - INFO - Manager stopped by user
+2025-12-21 17:36:37,018 - __main__ - INFO - Manager stopped by user
+2025-12-21 17:36:47,500 - __main__ - INFO - Checking database readiness...
+2025-12-21 17:36:49,576 - __main__ - INFO - Database ready
+2025-12-21 18:05:18,499 - __main__ - INFO - Checking database readiness...
+2025-12-21 18:05:20,588 - __main__ - INFO - Database ready
+2025-12-21 18:05:48,180 - __main__ - INFO - Checking database readiness...
+2025-12-21 18:05:50,232 - __main__ - INFO - Database ready
+2025-12-21 18:06:06,850 - __main__ - INFO - Checking database readiness...
+2025-12-21 18:06:08,908 - __main__ - INFO - Database ready
+2025-12-21 18:11:14,693 - __main__ - INFO - Manager stopped by user
+2025-12-21 18:11:18,874 - __main__ - INFO - Manager stopped by user
+2025-12-21 18:11:24,827 - __main__ - INFO - Checking database readiness...
+2025-12-21 18:11:26,892 - __main__ - INFO - Database ready
+2025-12-21 18:31:09,440 - __main__ - INFO - Checking database readiness...
+2025-12-21 18:31:11,518 - __main__ - INFO - Database ready

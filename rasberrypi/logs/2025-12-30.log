@@ -1,0 +1,23 @@
+2025-12-30 09:34:17,736 - __main__ - INFO - Checking database readiness...
+2025-12-30 09:34:19,991 - __main__ - INFO - Database ready
+2025-12-30 12:34:23,811 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 12:35:20,574 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 14:25:44,478 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 14:25:56,826 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 18:45:01,412 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 19:04:12,863 - __main__ - INFO - Checking database readiness...
+2025-12-30 19:04:14,973 - __main__ - INFO - Database ready
+2025-12-30 19:06:04,512 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.130
+2025-12-30 19:29:13,308 - __main__ - INFO - Checking database readiness...
+2025-12-30 19:29:15,374 - __main__ - INFO - Database ready
+2025-12-30 19:29:45,049 - __main__ - INFO - Checking database readiness...
+2025-12-30 19:29:47,139 - __main__ - INFO - Database ready
+2025-12-30 21:37:02,341 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 21:37:18,657 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 22:15:45,660 - __main__ - INFO - Checking database readiness...
+2025-12-30 22:15:47,836 - __main__ - INFO - Database ready
+2025-12-30 23:08:10,696 - __main__ - INFO - Checking database readiness...
+2025-12-30 23:08:12,798 - __main__ - INFO - Database ready
+2025-12-30 23:19:48,954 - manager.manager - ERROR - Cannot get sys.name from SNMP agent 192.168.80.96
+2025-12-30 23:49:43,807 - __main__ - INFO - Checking database readiness...
+2025-12-30 23:49:45,932 - __main__ - INFO - Database ready
