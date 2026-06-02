@@ -4,6 +4,7 @@ import json
 import socket
 import logging
 import traceback
+import time
 from typing import Optional
 
 # Set up logging to console
@@ -51,33 +52,24 @@ def parse_packet(data: bytes) -> Optional[dict]:
         logger.error(f"Unexpected error parsing packet: {e}\n{traceback.format_exc()}")
     return None
 
-def process_packet(payload: dict) -> None:
+def process_packet(payload: dict, conn) -> None:
     """Connect to database and write device and metric information."""
-    conn = None
     try:
         sysname = payload["sysname"]
         metrics = payload["metrics"]
         ip_address = payload.get("ip_address")
 
-        conn = get_connection()
         upsert_device(conn, sysname=sysname, ip_address=ip_address)
         write_metrics_batch(conn, sysname, metrics)
         conn.commit()
-        logger.info(f"Successfully wrote {len(metrics)} metrics for device '{sysname}' to database")
+        # logger.info(f"Successfully wrote {len(metrics)} metrics for device '{sysname}' to database")
     except Exception as e:
         logger.error(f"Database operation failed: {e}\n{traceback.format_exc()}")
-        if conn:
-            try:
-                conn.rollback()
-                logger.info("Database transaction rolled back successfully")
-            except Exception as re:
-                logger.error(f"Failed to rollback transaction: {re}")
-    finally:
-        if conn:
-            try:
-                conn.close()
-            except Exception as ce:
-                logger.error(f"Failed to close database connection: {ce}")
+        try:
+            conn.rollback()
+        except Exception as re:
+            logger.error(f"Failed to rollback transaction: {re}")
+
 
 def forward_packet(data: bytes, host: str, port: int) -> None:
     """Forward the UDP datagram to the Django UDP listener."""
@@ -105,21 +97,41 @@ def main():
         logger.error(f"Failed to bind socket on {bind_host}:{bind_port}: {e}")
         sys.exit(1)
 
+    # Create persistent DB connection
+    db_conn = None
+    
     while True:
         try:
             data, addr = sock.recvfrom(65535)
-            logger.info(f"Received packet ({len(data)} bytes) from {addr}")
+            
+            # Bắt đầu bấm giờ
+            start_time = time.perf_counter()
             
             # 1. Parse packet
             payload = parse_packet(data)
             if payload is None:
                 continue
                 
-            # 2. Persist to DB
-            process_packet(payload)
-            
-            # 3. Forward to Django
+            # Keep connection alive / reconnect if needed
+            if db_conn is None:
+                db_conn = get_connection()
+            else:
+                try:
+                    db_conn.ping(reconnect=True)
+                except Exception:
+                    db_conn = get_connection()
+                
+            # 2. Forward to Django (high priority for real-time frontend responsiveness)
             forward_packet(data, django_host, django_port)
+
+            # 3. Persist to DB
+            process_packet(payload, db_conn)
+            
+            # Kết thúc bấm giờ và ghi log
+            end_time = time.perf_counter()
+            exec_time = (end_time - start_time) * 1000
+            logger.info(f"[Worker Perf] Processed and forwarded packet ({len(data)} bytes) in {exec_time:.2f} ms")
+            
             
         except KeyboardInterrupt:
             logger.info("Worker stopped by user")
@@ -128,6 +140,8 @@ def main():
             logger.error(f"Error in main loop: {e}\n{traceback.format_exc()}")
 
     sock.close()
+    if db_conn:
+        db_conn.close()
 
 if __name__ == "__main__":
     main()
